@@ -1,0 +1,81 @@
+gl_code,account_name,account_type,normal_balance,description,parent_code
+1000,Application of Funds (Assets),asset,debit,group account,
+1100-1600,Current Assets,asset,debit,group account,1000
+1300,Accounts Receivable,asset,debit,group account,1100-1600
+1310,Debtors,asset,debit,ledger account; ERPNext account_type: Receivable,1300
+1200,Bank Accounts,asset,debit,group account; ERPNext account_type: Bank,1100-1600
+1100,Cash In Hand,asset,debit,group account; ERPNext account_type: Cash,1100-1600
+1110,Cash,asset,debit,ledger account; ERPNext account_type: Cash,1100
+1600,Loans and Advances (Assets),asset,debit,group account,1100-1600
+1610,Employee Advances,asset,debit,ledger account; ERPNext account_type: Payable,1600
+1650,Securities and Deposits,asset,debit,group account,1100-1600
+1651,Earnest Money,asset,debit,ledger account,1650
+1400,Stock Assets,asset,debit,group account; ERPNext account_type: Stock,1100-1600
+1410,Stock In Hand,asset,debit,ledger account; ERPNext account_type: Stock,1400
+1500,Tax Assets,asset,debit,group account,1100-1600
+1700,Fixed Assets,asset,debit,group account,1000
+1710,Capital Equipments,asset,debit,ledger account; ERPNext account_type: Fixed Asset,1700
+1720,Electronic Equipments,asset,debit,ledger account; ERPNext account_type: Fixed Asset,1700
+1730,Furnitures and Fixtures,asset,debit,ledger account; ERPNext account_type: Fixed Asset,1700
+1740,Office Equipments,asset,debit,ledger account; ERPNext account_type: Fixed Asset,1700
+1750,Plants and Machineries,asset,debit,ledger account; ERPNext account_type: Fixed Asset,1700
+1760,Buildings,asset,debit,ledger account; ERPNext account_type: Fixed Asset,1700
+1770,Softwares,asset,debit,ledger account; ERPNext account_type: Fixed Asset,1700
+1780,Accumulated Depreciation,asset,credit,ledger account; ERPNext account_type: Accumulated Depreciation; contra (normal balance flipped from root type),1700
+1790,CWIP Account,asset,debit,ledger account; ERPNext account_type: Capital Work in Progress,1700
+1800,Investments,asset,debit,group account,1000
+1900,Temporary Accounts,asset,debit,group account,1000
+1910,Temporary Opening,asset,debit,ledger account; ERPNext account_type: Temporary,1900
+5000,Expenses,expense,debit,group account,
+5100,Direct Expenses,expense,debit,group account,5000
+5110,Stock Expenses,expense,debit,group account,5100
+5111,Cost of Goods Sold,expense,debit,ledger account; ERPNext account_type: Cost of Goods Sold,5110
+5112,Expenses Included In Asset Valuation,expense,debit,ledger account; ERPNext account_type: Expenses Included In Asset Valuation,5110
+5118,Expenses Included In Valuation,expense,debit,ledger account; ERPNext account_type: Expenses Included In Valuation,5110
+5119,Stock Adjustment,expense,debit,ledger account; ERPNext account_type: Stock Adjustment,5110
+5200,Indirect Expenses,expense,debit,group account,5000
+5201,Administrative Expenses,expense,debit,ledger account,5200
+5202,Commission on Sales,expense,debit,ledger account,5200
+5203,Depreciation,expense,debit,ledger account; ERPNext account_type: Depreciation,5200
+5204,Entertainment Expenses,expense,debit,ledger account,5200
+5205,Freight and Forwarding Charges,expense,debit,ledger account; ERPNext account_type: Chargeable,5200
+5206,Legal Expenses,expense,debit,ledger account,5200
+5207,Marketing Expenses,expense,debit,ledger account; ERPNext account_type: Chargeable,5200
+5208,Office Maintenance Expenses,expense,debit,ledger account,5200
+5209,Office Rent,expense,debit,ledger account,5200
+5210,Postal Expenses,expense,debit,ledger account,5200
+5211,Print and Stationery,expense,debit,ledger account,5200
+5212,Round Off,expense,debit,ledger account; ERPNext account_type: Round Off,5200
+5213,Salary,expense,debit,ledger account,5200
+5214,Sales Expenses,expense,debit,ledger account,5200
+5215,Telephone Expenses,expense,debit,ledger account,5200
+5216,Travel Expenses,expense,debit,ledger account,5200
+5217,Utility Expenses,expense,debit,ledger account,5200
+5218,Write Off,expense,debit,ledger account,5200
+5219,Exchange Gain/Loss,expense,debit,ledger account,5200
+5220,Gain/Loss on Asset Disposal,expense,debit,ledger account,5200
+5221,Miscellaneous Expenses,expense,debit,ledger account; ERPNext account_type: Chargeable,5200
+4000,Income,revenue,credit,group account,
+4100,Direct Income,revenue,credit,group account,4000
+4110,Sales,revenue,credit,ledger account,4100
+4120,Service,revenue,credit,ledger account,4100
+4200,Indirect Income,revenue,credit,group account,4000
+2000,Source of Funds (Liabilities),liability,credit,group account,
+2100-2400,Current Liabilities,liability,credit,group account,2000
+2100,Accounts Payable,liability,credit,group account,2100-2400
+2110,Creditors,liability,credit,ledger account; ERPNext account_type: Payable,2100
+2120,Payroll Payable,liability,credit,ledger account,2100
+2200,Stock Liabilities,liability,credit,group account,2100-2400
+2210,Stock Received But Not Billed,liability,credit,ledger account; ERPNext account_type: Stock Received But Not Billed,2200
+2211,Asset Received But Not Billed,liability,credit,ledger account; ERPNext account_type: Asset Received But Not Billed,2200
+2300,Duties and Taxes,liability,credit,group account; ERPNext account_type: Tax,2100-2400
+2310,TDS Payable,liability,credit,ledger account,2300
+2400,Loans (Liabilities),liability,credit,group account,2100-2400
+2410,Secured Loans,liability,credit,ledger account,2400
+2420,Unsecured Loans,liability,credit,ledger account,2400
+2430,Bank Overdraft Account,liability,credit,ledger account,2400
+3000,Equity,equity,credit,group account,
+3100,Capital Stock,equity,credit,ledger account; ERPNext account_type: Equity,3000
+3200,Dividends Paid,equity,credit,ledger account; ERPNext account_type: Equity,3000
+3300,Opening Balance Equity,equity,credit,ledger account; ERPNext account_type: Equity,3000
+3400,Retained Earnings,equity,credit,ledger account; ERPNext account_type: Equity,3000

@@ -1,0 +1,290 @@
+gl_code,account_name,account_type,normal_balance,description,parent_code
+Bank,Bank,asset,debit,QBO AccountType (AccountTypeEnum value),
+Bank|CashAndCashEquivalents,CashAndCashEquivalents,asset,debit,QBO AccountSubType (detail type),Bank
+Bank|CashOnHand,CashOnHand,asset,debit,QBO AccountSubType (detail type); marked (default) for this account type in source,Bank
+Bank|Checking,Checking,asset,debit,QBO AccountSubType (detail type),Bank
+Bank|MoneyMarket,MoneyMarket,asset,debit,QBO AccountSubType (detail type),Bank
+Bank|OtherEarMarkedBankAccounts,OtherEarMarkedBankAccounts,asset,debit,QBO AccountSubType (detail type),Bank
+Bank|RentsHeldInTrust,RentsHeldInTrust,asset,debit,QBO AccountSubType (detail type),Bank
+Bank|Savings,Savings,asset,debit,QBO AccountSubType (detail type),Bank
+Bank|TrustAccounts,TrustAccounts,asset,debit,QBO AccountSubType (detail type),Bank
+Other Current Asset,Other Current Asset,asset,debit,QBO AccountType (AccountTypeEnum value),
+Other Current Asset|AllowanceForBadDebts,AllowanceForBadDebts,asset,debit,QBO AccountSubType (detail type),Other Current Asset
+Other Current Asset|AssetsAvailableForSale,AssetsAvailableForSale,asset,debit,QBO AccountSubType (detail type),Other Current Asset
+Other Current Asset|BalWithGovtAuthorities,BalWithGovtAuthorities,asset,debit,QBO AccountSubType (detail type),Other Current Asset
+Other Current Asset|CalledUpShareCapitalNotPaid,CalledUpShareCapitalNotPaid,asset,debit,QBO AccountSubType (detail type),Other Current Asset
+Other Current Asset|DevelopmentCosts,DevelopmentCosts,asset,debit,QBO AccountSubType (detail type),Other Current Asset
+Other Current Asset|EmployeeCashAdvances,EmployeeCashAdvances,asset,debit,QBO AccountSubType (detail type); marked (default) for this account type in source,Other Current Asset
+Other Current Asset|ExpenditureAuthorisationsAndLettersOfCredit,ExpenditureAuthorisationsAndLettersOfCredit,asset,debit,QBO AccountSubType (detail type),Other Current Asset
+Other Current Asset|GlobalTaxDeferred,GlobalTaxDeferred,asset,debit,QBO AccountSubType (detail type),Other Current Asset
+Other Current Asset|GlobalTaxRefund,GlobalTaxRefund,asset,debit,QBO AccountSubType (detail type),Other Current Asset
+Other Current Asset|InternalTransfers,InternalTransfers,asset,debit,QBO AccountSubType (detail type),Other Current Asset
+Other Current Asset|Inventory,Inventory,asset,debit,QBO AccountSubType (detail type),Other Current Asset
+Other Current Asset|Investment_MortgageRealEstateLoans,Investment_MortgageRealEstateLoans,asset,debit,QBO AccountSubType (detail type),Other Current Asset
+Other Current Asset|Investment_Other,Investment_Other,asset,debit,QBO AccountSubType (detail type),Other Current Asset
+Other Current Asset|Investment_TaxExemptSecurities,Investment_TaxExemptSecurities,asset,debit,QBO AccountSubType (detail type),Other Current Asset
+Other Current Asset|Investment_USGovernmentObligations,Investment_USGovernmentObligations,asset,debit,QBO AccountSubType (detail type),Other Current Asset
+Other Current Asset|LoansToOfficers,LoansToOfficers,asset,debit,QBO AccountSubType (detail type),Other Current Asset
+Other Current Asset|LoansToOthers,LoansToOthers,asset,debit,QBO AccountSubType (detail type),Other Current Asset
+Other Current Asset|LoansToStockholders,LoansToStockholders,asset,debit,QBO AccountSubType (detail type),Other Current Asset
+Other Current Asset|OtherConsumables,OtherConsumables,asset,debit,QBO AccountSubType (detail type),Other Current Asset
+Other Current Asset|OtherCurrentAssets,OtherCurrentAssets,asset,debit,QBO AccountSubType (detail type),Other Current Asset
+Other Current Asset|PrepaidExpenses,PrepaidExpenses,asset,debit,QBO AccountSubType (detail type),Other Current Asset
+Other Current Asset|ProvisionsCurrentAssets,ProvisionsCurrentAssets,asset,debit,QBO AccountSubType (detail type),Other Current Asset
+Other Current Asset|ShortTermInvestmentsInRelatedParties,ShortTermInvestmentsInRelatedParties,asset,debit,QBO AccountSubType (detail type),Other Current Asset
+Other Current Asset|ShortTermLoansAndAdvancesToRelatedParties,ShortTermLoansAndAdvancesToRelatedParties,asset,debit,QBO AccountSubType (detail type),Other Current Asset
+Other Current Asset|TradeAndOtherReceivables,TradeAndOtherReceivables,asset,debit,QBO AccountSubType (detail type),Other Current Asset
+Other Current Asset|Retainage,Retainage,asset,debit,QBO AccountSubType (detail type),Other Current Asset
+Other Current Asset|UndepositedFunds,UndepositedFunds,asset,debit,QBO AccountSubType (detail type),Other Current Asset
+Fixed Asset,Fixed Asset,asset,debit,QBO AccountType (AccountTypeEnum value),
+Fixed Asset|AccumulatedAmortization,AccumulatedAmortization,asset,debit,QBO AccountSubType (detail type),Fixed Asset
+Fixed Asset|AccumulatedDepletion,AccumulatedDepletion,asset,debit,QBO AccountSubType (detail type),Fixed Asset
+Fixed Asset|AccumulatedDepreciation,AccumulatedDepreciation,asset,debit,QBO AccountSubType (detail type),Fixed Asset
+Fixed Asset|AssetsInCourseOfConstruction,AssetsInCourseOfConstruction,asset,debit,QBO AccountSubType (detail type),Fixed Asset
+Fixed Asset|Buildings,Buildings,asset,debit,QBO AccountSubType (detail type),Fixed Asset
+Fixed Asset|CapitalWip,CapitalWip,asset,debit,QBO AccountSubType (detail type),Fixed Asset
+Fixed Asset|CumulativeDepreciationOnIntangibleAssets,CumulativeDepreciationOnIntangibleAssets,asset,debit,QBO AccountSubType (detail type),Fixed Asset
+Fixed Asset|DepletableAssets,DepletableAssets,asset,debit,QBO AccountSubType (detail type),Fixed Asset
+Fixed Asset|FixedAssetComputers,FixedAssetComputers,asset,debit,QBO AccountSubType (detail type),Fixed Asset
+Fixed Asset|FixedAssetCopiers,FixedAssetCopiers,asset,debit,QBO AccountSubType (detail type),Fixed Asset
+Fixed Asset|FixedAssetFurniture,FixedAssetFurniture,asset,debit,QBO AccountSubType (detail type),Fixed Asset
+Fixed Asset|FixedAssetPhone,FixedAssetPhone,asset,debit,QBO AccountSubType (detail type),Fixed Asset
+Fixed Asset|FixedAssetPhotoVideo,FixedAssetPhotoVideo,asset,debit,QBO AccountSubType (detail type),Fixed Asset
+Fixed Asset|FixedAssetSoftware,FixedAssetSoftware,asset,debit,QBO AccountSubType (detail type),Fixed Asset
+Fixed Asset|FixedAssetOtherToolsEquipment,FixedAssetOtherToolsEquipment,asset,debit,QBO AccountSubType (detail type),Fixed Asset
+Fixed Asset|FurnitureAndFixtures,FurnitureAndFixtures,asset,debit,QBO AccountSubType (detail type); marked (default) for this account type in source,Fixed Asset
+Fixed Asset|IntangibleAssets,IntangibleAssets,asset,debit,QBO AccountSubType (detail type),Fixed Asset
+Fixed Asset|IntangibleAssetsUnderDevelopment,IntangibleAssetsUnderDevelopment,asset,debit,QBO AccountSubType (detail type),Fixed Asset
+Fixed Asset|Land,Land,asset,debit,QBO AccountSubType (detail type),Fixed Asset
+Fixed Asset|LandAsset,LandAsset,asset,debit,QBO AccountSubType (detail type),Fixed Asset
+Fixed Asset|LeaseholdImprovements,LeaseholdImprovements,asset,debit,QBO AccountSubType (detail type),Fixed Asset
+Fixed Asset|MachineryAndEquipment,MachineryAndEquipment,asset,debit,QBO AccountSubType (detail type),Fixed Asset
+Fixed Asset|NonCurrentAssets,NonCurrentAssets,asset,debit,QBO AccountSubType (detail type),Fixed Asset
+Fixed Asset|OtherFixedAssets,OtherFixedAssets,asset,debit,QBO AccountSubType (detail type),Fixed Asset
+Fixed Asset|ParticipatingInterests,ParticipatingInterests,asset,debit,QBO AccountSubType (detail type),Fixed Asset
+Fixed Asset|ProvisionsFixedAssets,ProvisionsFixedAssets,asset,debit,QBO AccountSubType (detail type),Fixed Asset
+Fixed Asset|Vehicles,Vehicles,asset,debit,QBO AccountSubType (detail type),Fixed Asset
+Other Asset,Other Asset,asset,debit,QBO AccountType (AccountTypeEnum value),
+Other Asset|AccumulatedAmortizationOfOtherAssets,AccumulatedAmortizationOfOtherAssets,asset,debit,QBO AccountSubType (detail type),Other Asset
+Other Asset|AssetsHeldForSale,AssetsHeldForSale,asset,debit,QBO AccountSubType (detail type),Other Asset
+Other Asset|AvailableForSaleFinancialAssets,AvailableForSaleFinancialAssets,asset,debit,QBO AccountSubType (detail type),Other Asset
+Other Asset|DeferredTax,DeferredTax,asset,debit,QBO AccountSubType (detail type),Other Asset
+Other Asset|Goodwill,Goodwill,asset,debit,QBO AccountSubType (detail type),Other Asset
+Other Asset|Investments,Investments,asset,debit,QBO AccountSubType (detail type),Other Asset
+Other Asset|LeaseBuyout,LeaseBuyout,asset,debit,QBO AccountSubType (detail type),Other Asset
+Other Asset|Licenses,Licenses,asset,debit,QBO AccountSubType (detail type); marked (default) for this account type in source,Other Asset
+Other Asset|LongTermInvestments,LongTermInvestments,asset,debit,QBO AccountSubType (detail type),Other Asset
+Other Asset|LongTermLoansAndAdvancesToRelatedParties,LongTermLoansAndAdvancesToRelatedParties,asset,debit,QBO AccountSubType (detail type),Other Asset
+Other Asset|OrganizationalCosts,OrganizationalCosts,asset,debit,QBO AccountSubType (detail type),Other Asset
+Other Asset|OtherIntangibleAssets,OtherIntangibleAssets,asset,debit,QBO AccountSubType (detail type),Other Asset
+Other Asset|OtherLongTermAssets,OtherLongTermAssets,asset,debit,QBO AccountSubType (detail type),Other Asset
+Other Asset|OtherLongTermInvestments,OtherLongTermInvestments,asset,debit,QBO AccountSubType (detail type),Other Asset
+Other Asset|OtherLongTermLoansAndAdvances,OtherLongTermLoansAndAdvances,asset,debit,QBO AccountSubType (detail type),Other Asset
+Other Asset|PrepaymentsAndAccruedIncome,PrepaymentsAndAccruedIncome,asset,debit,QBO AccountSubType (detail type),Other Asset
+Other Asset|ProvisionsNonCurrentAssets,ProvisionsNonCurrentAssets,asset,debit,QBO AccountSubType (detail type),Other Asset
+Other Asset|SecurityDeposits,SecurityDeposits,asset,debit,QBO AccountSubType (detail type),Other Asset
+Accounts Receivable,Accounts Receivable,asset,debit,QBO AccountType (AccountTypeEnum value),
+Accounts Receivable|Accounts Receivable,Accounts Receivable,asset,debit,QBO AccountSubType (detail type),Accounts Receivable
+Equity,Equity,equity,credit,QBO AccountType (AccountTypeEnum value),
+Equity|AccumulatedAdjustment,AccumulatedAdjustment,equity,credit,QBO AccountSubType (detail type),Equity
+Equity|AccumulatedOtherComprehensiveIncome,AccumulatedOtherComprehensiveIncome,equity,credit,QBO AccountSubType (detail type),Equity
+Equity|CalledUpShareCapital,CalledUpShareCapital,equity,credit,QBO AccountSubType (detail type),Equity
+Equity|CapitalReserves,CapitalReserves,equity,credit,QBO AccountSubType (detail type),Equity
+Equity|CommonStock,CommonStock,equity,credit,QBO AccountSubType (detail type),Equity
+Equity|DividendDisbursed,DividendDisbursed,equity,credit,QBO AccountSubType (detail type),Equity
+Equity|EquityInEarningsOfSubsiduaries,EquityInEarningsOfSubsiduaries,equity,credit,QBO AccountSubType (detail type),Equity
+Equity|EstimatedTaxes,EstimatedTaxes,equity,credit,QBO AccountSubType (detail type),Equity
+Equity|Funds,Funds,equity,credit,QBO AccountSubType (detail type),Equity
+Equity|Healthcare,Healthcare,equity,credit,QBO AccountSubType (detail type),Equity
+Equity|InvestmentGrants,InvestmentGrants,equity,credit,QBO AccountSubType (detail type),Equity
+Equity|MoneyReceivedAgainstShareWarrants,MoneyReceivedAgainstShareWarrants,equity,credit,QBO AccountSubType (detail type),Equity
+Equity|OtherFreeReserves,OtherFreeReserves,equity,credit,QBO AccountSubType (detail type),Equity
+Equity|OpeningBalanceEquity,OpeningBalanceEquity,equity,credit,QBO AccountSubType (detail type); marked (default) for this account type in source,Equity
+Equity|OwnersEquity,OwnersEquity,equity,credit,QBO AccountSubType (detail type),Equity
+Equity|PaidInCapitalOrSurplus,PaidInCapitalOrSurplus,equity,credit,QBO AccountSubType (detail type),Equity
+Equity|PartnerContributions,PartnerContributions,equity,credit,QBO AccountSubType (detail type),Equity
+Equity|PartnerDistributions,PartnerDistributions,equity,credit,QBO AccountSubType (detail type),Equity
+Equity|PersonalIncome,PersonalIncome,equity,credit,QBO AccountSubType (detail type),Equity
+Equity|PersonalExpense,PersonalExpense,equity,credit,QBO AccountSubType (detail type),Equity
+Equity|PartnersEquity,PartnersEquity,equity,credit,QBO AccountSubType (detail type),Equity
+Equity|PreferredStock,PreferredStock,equity,credit,QBO AccountSubType (detail type),Equity
+Equity|RetainedEarnings,RetainedEarnings,equity,credit,QBO AccountSubType (detail type),Equity
+Equity|ShareApplicationMoneyPendingAllotment,ShareApplicationMoneyPendingAllotment,equity,credit,QBO AccountSubType (detail type),Equity
+Equity|ShareCapital,ShareCapital,equity,credit,QBO AccountSubType (detail type),Equity
+Equity|TreasuryStock,TreasuryStock,equity,credit,QBO AccountSubType (detail type),Equity
+Expense,Expense,expense,debit,QBO AccountType (AccountTypeEnum value),
+Expense|AdvertisingPromotional,AdvertisingPromotional,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|AmortizationExpense,AmortizationExpense,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|AppropriationsToDepreciation,AppropriationsToDepreciation,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|Auto,Auto,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|BadDebts,BadDebts,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|BankCharges,BankCharges,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|BorrowingCost,BorrowingCost,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|CharitableContributions,CharitableContributions,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|CommissionsAndFees,CommissionsAndFees,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|CostOfLabor,CostOfLabor,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|DistributionCosts,DistributionCosts,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|DuesSubscriptions,DuesSubscriptions,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|Entertainment,Entertainment,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|EntertainmentMeals,EntertainmentMeals,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|EquipmentRental,EquipmentRental,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|ExternalServices,ExternalServices,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|ExtraordinaryCharges,ExtraordinaryCharges,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|FinanceCosts,FinanceCosts,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|GlobalTaxExpense,GlobalTaxExpense,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|IncomeTaxExpense,IncomeTaxExpense,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|Insurance,Insurance,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|InterestPaid,InterestPaid,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|LegalProfessionalFees,LegalProfessionalFees,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|LossOnDiscontinuedOperationsNetOfTax,LossOnDiscontinuedOperationsNetOfTax,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|ManagementCompensation,ManagementCompensation,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|OfficeExpenses,OfficeExpenses,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|OfficeGeneralAdministrativeExpenses,OfficeGeneralAdministrativeExpenses,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|OtherBusinessExpenses,OtherBusinessExpenses,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|OtherCurrentOperatingCharges,OtherCurrentOperatingCharges,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|OtherExternalServices,OtherExternalServices,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|OtherMiscellaneousServiceCost,OtherMiscellaneousServiceCost,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|OtherRentalCosts,OtherRentalCosts,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|OtherSellingExpenses,OtherSellingExpenses,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|PayrollExpenses,PayrollExpenses,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|ProjectStudiesSurveysAssessments,ProjectStudiesSurveysAssessments,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|PromotionalMeals,PromotionalMeals,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|PurchasesRebates,PurchasesRebates,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|RentOrLeaseOfBuildings,RentOrLeaseOfBuildings,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|RepairMaintenance,RepairMaintenance,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|ShippingAndDeliveryExpense,ShippingAndDeliveryExpense,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|ShippingFreightDelivery,ShippingFreightDelivery,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|StaffCosts,StaffCosts,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|Sundry,Sundry,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|SuppliesMaterials,SuppliesMaterials,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|Travel,Travel,expense,debit,QBO AccountSubType (detail type); marked (default) for this account type in source,Expense
+Expense|TravelExpensesGeneralAndAdminExpenses,TravelExpensesGeneralAndAdminExpenses,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|TravelExpensesSellingExpense,TravelExpensesSellingExpense,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|TravelMeals,TravelMeals,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|Utilities,Utilities,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|TaxesPaid,TaxesPaid,expense,debit,QBO AccountSubType (detail type),Expense
+Expense|UnappliedCashBillPaymentExpense,UnappliedCashBillPaymentExpense,expense,debit,QBO AccountSubType (detail type),Expense
+Other Expense,Other Expense,expense,debit,QBO AccountType (AccountTypeEnum value),
+Other Expense|Amortization,Amortization,expense,debit,QBO AccountSubType (detail type),Other Expense
+Other Expense|DeferredTaxExpense,DeferredTaxExpense,expense,debit,QBO AccountSubType (detail type),Other Expense
+Other Expense|Depletion,Depletion,expense,debit,QBO AccountSubType (detail type),Other Expense
+Other Expense|Depreciation,Depreciation,expense,debit,QBO AccountSubType (detail type); marked (default) for this account type in source,Other Expense
+Other Expense|ExceptionalItems,ExceptionalItems,expense,debit,QBO AccountSubType (detail type),Other Expense
+Other Expense|ExchangeGainOrLoss,ExchangeGainOrLoss,expense,debit,QBO AccountSubType (detail type),Other Expense
+Other Expense|ExtraordinaryItems,ExtraordinaryItems,expense,debit,QBO AccountSubType (detail type),Other Expense
+Other Expense|GasAndFuel,GasAndFuel,expense,debit,QBO AccountSubType (detail type),Other Expense
+Other Expense|HomeOffice,HomeOffice,expense,debit,QBO AccountSubType (detail type),Other Expense
+Other Expense|HomeOwnerRentalInsurance,HomeOwnerRentalInsurance,expense,debit,QBO AccountSubType (detail type),Other Expense
+Other Expense|IncomeTaxOtherExpense,IncomeTaxOtherExpense,expense,debit,QBO AccountSubType (detail type),Other Expense
+Other Expense|MatCredit,MatCredit,expense,debit,QBO AccountSubType (detail type),Other Expense
+Other Expense|MortgageInterest,MortgageInterest,expense,debit,QBO AccountSubType (detail type),Other Expense
+Other Expense|OtherHomeOfficeExpenses,OtherHomeOfficeExpenses,expense,debit,QBO AccountSubType (detail type),Other Expense
+Other Expense|OtherVehicleExpenses,OtherVehicleExpenses,expense,debit,QBO AccountSubType (detail type),Other Expense
+Other Expense|OtherMiscellaneousExpense,OtherMiscellaneousExpense,expense,debit,QBO AccountSubType (detail type),Other Expense
+Other Expense|ParkingAndTolls,ParkingAndTolls,expense,debit,QBO AccountSubType (detail type),Other Expense
+Other Expense|PenaltiesSettlements,PenaltiesSettlements,expense,debit,QBO AccountSubType (detail type),Other Expense
+Other Expense|PriorPeriodItems,PriorPeriodItems,expense,debit,QBO AccountSubType (detail type),Other Expense
+Other Expense|RentAndLease,RentAndLease,expense,debit,QBO AccountSubType (detail type),Other Expense
+Other Expense|RepairsAndMaintenance,RepairsAndMaintenance,expense,debit,QBO AccountSubType (detail type),Other Expense
+Other Expense|TaxRoundoffGainOrLoss,TaxRoundoffGainOrLoss,expense,debit,QBO AccountSubType (detail type),Other Expense
+Other Expense|Utilities,Utilities,expense,debit,QBO AccountSubType (detail type),Other Expense
+Other Expense|Vehicle,Vehicle,expense,debit,QBO AccountSubType (detail type),Other Expense
+Other Expense|VehicleInsurance,VehicleInsurance,expense,debit,QBO AccountSubType (detail type),Other Expense
+Other Expense|VehicleLease,VehicleLease,expense,debit,QBO AccountSubType (detail type),Other Expense
+Other Expense|VehicleLoanInterest,VehicleLoanInterest,expense,debit,QBO AccountSubType (detail type),Other Expense
+Other Expense|VehicleLoan,VehicleLoan,expense,debit,QBO AccountSubType (detail type),Other Expense
+Other Expense|VehicleRegistration,VehicleRegistration,expense,debit,QBO AccountSubType (detail type),Other Expense
+Other Expense|VehicleRepairs,VehicleRepairs,expense,debit,QBO AccountSubType (detail type),Other Expense
+Other Expense|WashAndRoadServices,WashAndRoadServices,expense,debit,QBO AccountSubType (detail type),Other Expense
+Cost of Goods Sold,Cost of Goods Sold,expense,debit,QBO AccountType (AccountTypeEnum value),
+Cost of Goods Sold|CostOfLaborCos,CostOfLaborCos,expense,debit,QBO AccountSubType (detail type); marked (default) for this account type in source,Cost of Goods Sold
+Cost of Goods Sold|CostOfSales,CostOfSales,expense,debit,QBO AccountSubType (detail type),Cost of Goods Sold
+Cost of Goods Sold|EquipmentRentalCos,EquipmentRentalCos,expense,debit,QBO AccountSubType (detail type),Cost of Goods Sold
+Cost of Goods Sold|FreightAndDeliveryCost,FreightAndDeliveryCost,expense,debit,QBO AccountSubType (detail type),Cost of Goods Sold
+Cost of Goods Sold|OtherCostsOfServiceCos,OtherCostsOfServiceCos,expense,debit,QBO AccountSubType (detail type),Cost of Goods Sold
+Cost of Goods Sold|ShippingFreightDeliveryCos,ShippingFreightDeliveryCos,expense,debit,QBO AccountSubType (detail type),Cost of Goods Sold
+Cost of Goods Sold|SuppliesMaterialsCogs,SuppliesMaterialsCogs,expense,debit,QBO AccountSubType (detail type),Cost of Goods Sold
+Accounts Payable,Accounts Payable,liability,credit,QBO AccountType (AccountTypeEnum value),
+Accounts Payable|Accounts Payable,Accounts Payable,liability,credit,QBO AccountSubType (detail type),Accounts Payable
+Accounts Payable|OutstandingDuesMicroSmallEnterprise,OutstandingDuesMicroSmallEnterprise,liability,credit,QBO AccountSubType (detail type),Accounts Payable
+Accounts Payable|OutstandingDuesOtherThanMicroSmallEnterprise,OutstandingDuesOtherThanMicroSmallEnterprise,liability,credit,QBO AccountSubType (detail type),Accounts Payable
+Credit Card,Credit Card,liability,credit,QBO AccountType (AccountTypeEnum value),
+Credit Card|Credit Card,Credit Card,liability,credit,QBO AccountSubType (detail type),Credit Card
+Long Term Liability,Long Term Liability,liability,credit,QBO AccountType (AccountTypeEnum value),
+Long Term Liability|AccrualsAndDeferredIncome,AccrualsAndDeferredIncome,liability,credit,QBO AccountSubType (detail type),Long Term Liability
+Long Term Liability|AccruedLongLermLiabilities,AccruedLongLermLiabilities,liability,credit,QBO AccountSubType (detail type),Long Term Liability
+Long Term Liability|AccruedVacationPayable,AccruedVacationPayable,liability,credit,QBO AccountSubType (detail type),Long Term Liability
+Long Term Liability|BankLoans,BankLoans,liability,credit,QBO AccountSubType (detail type),Long Term Liability
+Long Term Liability|DebtsRelatedToParticipatingInterests,DebtsRelatedToParticipatingInterests,liability,credit,QBO AccountSubType (detail type),Long Term Liability
+Long Term Liability|DeferredTaxLiabilities,DeferredTaxLiabilities,liability,credit,QBO AccountSubType (detail type),Long Term Liability
+Long Term Liability|GovernmentAndOtherPublicAuthorities,GovernmentAndOtherPublicAuthorities,liability,credit,QBO AccountSubType (detail type),Long Term Liability
+Long Term Liability|GroupAndAssociates,GroupAndAssociates,liability,credit,QBO AccountSubType (detail type),Long Term Liability
+Long Term Liability|LiabilitiesRelatedToAssetsHeldForSale,LiabilitiesRelatedToAssetsHeldForSale,liability,credit,QBO AccountSubType (detail type),Long Term Liability
+Long Term Liability|LongTermBorrowings,LongTermBorrowings,liability,credit,QBO AccountSubType (detail type),Long Term Liability
+Long Term Liability|LongTermDebit,LongTermDebit,liability,credit,QBO AccountSubType (detail type),Long Term Liability
+Long Term Liability|LongTermEmployeeBenefitObligations,LongTermEmployeeBenefitObligations,liability,credit,QBO AccountSubType (detail type),Long Term Liability
+Long Term Liability|NotesPayable,NotesPayable,liability,credit,QBO AccountSubType (detail type); marked (default) for this account type in source,Long Term Liability
+Long Term Liability|ObligationsUnderFinanceLeases,ObligationsUnderFinanceLeases,liability,credit,QBO AccountSubType (detail type),Long Term Liability
+Long Term Liability|OtherLongTermLiabilities,OtherLongTermLiabilities,liability,credit,QBO AccountSubType (detail type),Long Term Liability
+Long Term Liability|OtherLongTermProvisions,OtherLongTermProvisions,liability,credit,QBO AccountSubType (detail type),Long Term Liability
+Long Term Liability|ProvisionForLiabilities,ProvisionForLiabilities,liability,credit,QBO AccountSubType (detail type),Long Term Liability
+Long Term Liability|ProvisionsNonCurrentLiabilities,ProvisionsNonCurrentLiabilities,liability,credit,QBO AccountSubType (detail type),Long Term Liability
+Long Term Liability|ShareholderNotesPayable,ShareholderNotesPayable,liability,credit,QBO AccountSubType (detail type),Long Term Liability
+Long Term Liability|StaffAndRelatedLongTermLiabilityAccounts,StaffAndRelatedLongTermLiabilityAccounts,liability,credit,QBO AccountSubType (detail type),Long Term Liability
+Other Current Liability,Other Current Liability,liability,credit,QBO AccountType (AccountTypeEnum value),
+Other Current Liability|AccruedLiabilities,AccruedLiabilities,liability,credit,QBO AccountSubType (detail type),Other Current Liability
+Other Current Liability|CurrentLiabilities,CurrentLiabilities,liability,credit,QBO AccountSubType (detail type),Other Current Liability
+Other Current Liability|CurrentPortionEmployeeBenefitsObligations,CurrentPortionEmployeeBenefitsObligations,liability,credit,QBO AccountSubType (detail type),Other Current Liability
+Other Current Liability|CurrentPortionOfObligationsUnderFinanceLeases,CurrentPortionOfObligationsUnderFinanceLeases,liability,credit,QBO AccountSubType (detail type),Other Current Liability
+Other Current Liability|CurrentTaxLiability,CurrentTaxLiability,liability,credit,QBO AccountSubType (detail type),Other Current Liability
+Other Current Liability|DirectDepositPayable,DirectDepositPayable,liability,credit,QBO AccountSubType (detail type),Other Current Liability
+Other Current Liability|DividendsPayable,DividendsPayable,liability,credit,QBO AccountSubType (detail type),Other Current Liability
+Other Current Liability|DutiesAndTaxes,DutiesAndTaxes,liability,credit,QBO AccountSubType (detail type),Other Current Liability
+Other Current Liability|FederalIncomeTaxPayable,FederalIncomeTaxPayable,liability,credit,QBO AccountSubType (detail type),Other Current Liability
+Other Current Liability|GlobalTaxPayable,GlobalTaxPayable,liability,credit,QBO AccountSubType (detail type),Other Current Liability
+Other Current Liability|GlobalTaxSuspense,GlobalTaxSuspense,liability,credit,QBO AccountSubType (detail type),Other Current Liability
+Other Current Liability|InsurancePayable,InsurancePayable,liability,credit,QBO AccountSubType (detail type),Other Current Liability
+Other Current Liability|InterestPayables,InterestPayables,liability,credit,QBO AccountSubType (detail type),Other Current Liability
+Other Current Liability|LineOfCredit,LineOfCredit,liability,credit,QBO AccountSubType (detail type),Other Current Liability
+Other Current Liability|LoanPayable,LoanPayable,liability,credit,QBO AccountSubType (detail type),Other Current Liability
+Other Current Liability|OtherCurrentLiabilities,OtherCurrentLiabilities,liability,credit,QBO AccountSubType (detail type); marked (default) for this account type in source,Other Current Liability
+Other Current Liability|PayrollClearing,PayrollClearing,liability,credit,QBO AccountSubType (detail type),Other Current Liability
+Other Current Liability|PayrollTaxPayable,PayrollTaxPayable,liability,credit,QBO AccountSubType (detail type),Other Current Liability
+Other Current Liability|PrepaidExpensesPayable,PrepaidExpensesPayable,liability,credit,QBO AccountSubType (detail type),Other Current Liability
+Other Current Liability|ProvisionForWarrantyObligations,ProvisionForWarrantyObligations,liability,credit,QBO AccountSubType (detail type),Other Current Liability
+Other Current Liability|ProvisionsCurrentLiabilities,ProvisionsCurrentLiabilities,liability,credit,QBO AccountSubType (detail type),Other Current Liability
+Other Current Liability|RentsInTrustLiability,RentsInTrustLiability,liability,credit,QBO AccountSubType (detail type),Other Current Liability
+Other Current Liability|TrustAccountsLiabilities,TrustAccountsLiabilities,liability,credit,QBO AccountSubType (detail type),Other Current Liability
+Other Current Liability|SalesTaxPayable,SalesTaxPayable,liability,credit,QBO AccountSubType (detail type),Other Current Liability
+Other Current Liability|ShortTermBorrowings,ShortTermBorrowings,liability,credit,QBO AccountSubType (detail type),Other Current Liability
+Other Current Liability|SocialSecurityAgencies,SocialSecurityAgencies,liability,credit,QBO AccountSubType (detail type),Other Current Liability
+Other Current Liability|StaffAndRelatedLiabilityAccounts,StaffAndRelatedLiabilityAccounts,liability,credit,QBO AccountSubType (detail type),Other Current Liability
+Other Current Liability|StateLocalIncomeTaxPayable,StateLocalIncomeTaxPayable,liability,credit,QBO AccountSubType (detail type),Other Current Liability
+Other Current Liability|SundryDebtorsAndCreditors,SundryDebtorsAndCreditors,liability,credit,QBO AccountSubType (detail type),Other Current Liability
+Other Current Liability|TradeAndOtherPayables,TradeAndOtherPayables,liability,credit,QBO AccountSubType (detail type),Other Current Liability
+Income,Income,revenue,credit,QBO AccountType (AccountTypeEnum value),
+Income|CashReceiptIncome,CashReceiptIncome,revenue,credit,QBO AccountSubType (detail type),Income
+Income|DiscountsRefundsGiven,DiscountsRefundsGiven,revenue,credit,QBO AccountSubType (detail type),Income
+Income|NonProfitIncome,NonProfitIncome,revenue,credit,QBO AccountSubType (detail type),Income
+Income|OperatingGrants,OperatingGrants,revenue,credit,QBO AccountSubType (detail type),Income
+Income|OtherCurrentOperatingIncome,OtherCurrentOperatingIncome,revenue,credit,QBO AccountSubType (detail type),Income
+Income|OtherPrimaryIncome,OtherPrimaryIncome,revenue,credit,QBO AccountSubType (detail type); marked (default) for this account type in source,Income
+Income|OwnWorkCapitalized,OwnWorkCapitalized,revenue,credit,QBO AccountSubType (detail type),Income
+Income|RevenueGeneral,RevenueGeneral,revenue,credit,QBO AccountSubType (detail type),Income
+Income|SalesOfProductIncome,SalesOfProductIncome,revenue,credit,QBO AccountSubType (detail type),Income
+Income|SalesRetail,SalesRetail,revenue,credit,QBO AccountSubType (detail type),Income
+Income|SalesWholesale,SalesWholesale,revenue,credit,QBO AccountSubType (detail type),Income
+Income|SavingsByTaxScheme,SavingsByTaxScheme,revenue,credit,QBO AccountSubType (detail type),Income
+Income|ServiceFeeIncome,ServiceFeeIncome,revenue,credit,QBO AccountSubType (detail type),Income
+Income|UnappliedCashPaymentIncome,UnappliedCashPaymentIncome,revenue,credit,QBO AccountSubType (detail type),Income
+Other Income,Other Income,revenue,credit,QBO AccountType (AccountTypeEnum value),
+Other Income|DividendIncome,DividendIncome,revenue,credit,QBO AccountSubType (detail type),Other Income
+Other Income|GainLossOnSaleOfFixedAssets,GainLossOnSaleOfFixedAssets,revenue,credit,QBO AccountSubType (detail type),Other Income
+Other Income|GainLossOnSaleOfInvestments,GainLossOnSaleOfInvestments,revenue,credit,QBO AccountSubType (detail type),Other Income
+Other Income|InterestEarned,InterestEarned,revenue,credit,QBO AccountSubType (detail type),Other Income
+Other Income|LossOnDisposalOfAssets,LossOnDisposalOfAssets,revenue,credit,QBO AccountSubType (detail type),Other Income
+Other Income|OtherOperatingIncome,OtherOperatingIncome,revenue,credit,QBO AccountSubType (detail type),Other Income
+Other Income|OtherInvestmentIncome,OtherInvestmentIncome,revenue,credit,QBO AccountSubType (detail type); marked (default) for this account type in source,Other Income
+Other Income|OtherMiscellaneousIncome,OtherMiscellaneousIncome,revenue,credit,QBO AccountSubType (detail type),Other Income
+Other Income|TaxExemptInterest,TaxExemptInterest,revenue,credit,QBO AccountSubType (detail type),Other Income
+Other Income|UnrealisedLossOnSecuritiesNetOfTax,UnrealisedLossOnSecuritiesNetOfTax,revenue,credit,QBO AccountSubType (detail type),Other Income

@@ -1,0 +1,354 @@
+Source: https://developer.intuit.com/app/developer/qbo/docs/api/accounting/all-entities/account
+Captured: 2026-10-11 (rendered page text of the Account entity reference, AccountType / AccountSubType child-attribute tables expanded; the page is a JavaScript single-page app, so the static HTML contains no table data)
+Verbatim rendered text follows between the markers.
+-----BEGIN RENDERED TEXT-----
+Classification
+read only
+system defined
+String , filterable
+The classification of an account. Not supported for non-posting accounts. Valid values include: Asset, Equity, Expense, Liability, Revenue
+FullyQualifiedName
+read only
+system defined
+String , filterable , sortable
+Fully qualified name of the object; derived from Name and ParentRef. The fully qualified name prepends the topmost parent, followed by each subaccount separated by colons and takes the form of Parent:Account1:SubAccount1:SubAccount2. System generated. Limited to 5 levels.
+AccountType
+AccountTypeEnum , filterable
+A detailed account classification that specifies the use of this account. The type is based on the Classification.
+
+Hide child attributes
+ASSET
+ACCOUNT TYPE
+ACCOUNT SUB TYPE
+Bank
+Default
+CashAndCashEquivalents
+CashOnHand (default)
+Checking
+MoneyMarket
+OtherEarMarkedBankAccounts
+RentsHeldInTrust
+Savings
+TrustAccounts
+
+Other Current Asset
+Default
+AllowanceForBadDebts
+AssetsAvailableForSale
+BalWithGovtAuthorities
+CalledUpShareCapitalNotPaid
+DevelopmentCosts
+EmployeeCashAdvances (default)
+ExpenditureAuthorisationsAndLettersOfCredit
+GlobalTaxDeferred
+GlobalTaxRefund
+InternalTransfers
+Inventory
+Investment_MortgageRealEstateLoans
+Investment_Other
+Investment_TaxExemptSecurities
+Investment_USGovernmentObligations
+LoansToOfficers
+LoansToOthers
+LoansToStockholders
+OtherConsumables
+OtherCurrentAssets
+PrepaidExpenses
+ProvisionsCurrentAssets
+ShortTermInvestmentsInRelatedParties
+ShortTermLoansAndAdvancesToRelatedParties
+TradeAndOtherReceivables
+Retainage
+UndepositedFunds
+
+Fixed Asset
+Default
+AccumulatedAmortization
+AccumulatedDepletion
+AccumulatedDepreciation
+AssetsInCourseOfConstruction
+Buildings
+CapitalWip
+CumulativeDepreciationOnIntangibleAssets
+DepletableAssets
+FixedAssetComputers
+FixedAssetCopiers
+FixedAssetFurniture
+FixedAssetPhone
+FixedAssetPhotoVideo
+FixedAssetSoftware
+FixedAssetOtherToolsEquipment
+FurnitureAndFixtures (default)
+IntangibleAssets
+IntangibleAssetsUnderDevelopment
+Land
+LandAsset
+LeaseholdImprovements
+MachineryAndEquipment
+NonCurrentAssets
+OtherFixedAssets
+ParticipatingInterests
+ProvisionsFixedAssets
+Vehicles
+
+Other Asset
+Default
+AccumulatedAmortizationOfOtherAssets
+AssetsHeldForSale
+AvailableForSaleFinancialAssets
+DeferredTax
+Goodwill
+Investments
+LeaseBuyout
+Licenses (default)
+LongTermInvestments
+LongTermLoansAndAdvancesToRelatedParties
+OrganizationalCosts
+OtherIntangibleAssets
+OtherLongTermAssets
+OtherLongTermInvestments
+OtherLongTermLoansAndAdvances
+PrepaymentsAndAccruedIncome
+ProvisionsNonCurrentAssets
+SecurityDeposits
+
+Accounts Receivable
+Default
+Accounts Receivable
+
+EQUITY
+ACCOUNT TYPE
+ACCOUNT SUB TYPE
+Equity
+Default
+AccumulatedAdjustment
+AccumulatedOtherComprehensiveIncome
+CalledUpShareCapital
+CapitalReserves
+CommonStock
+DividendDisbursed
+EquityInEarningsOfSubsiduaries
+EstimatedTaxes
+Funds
+Healthcare
+InvestmentGrants
+MoneyReceivedAgainstShareWarrants
+OtherFreeReserves
+OpeningBalanceEquity (default)
+OwnersEquity
+PaidInCapitalOrSurplus
+PartnerContributions
+PartnerDistributions
+PersonalIncome
+PersonalExpense
+PartnersEquity
+PreferredStock
+RetainedEarnings
+ShareApplicationMoneyPendingAllotment
+ShareCapital
+TreasuryStock
+
+EXPENSE
+ACCOUNT TYPE
+ACCOUNT SUB TYPE
+Expense
+Default
+AdvertisingPromotional
+AmortizationExpense
+AppropriationsToDepreciation
+Auto
+BadDebts
+BankCharges
+BorrowingCost
+CharitableContributions
+CommissionsAndFees
+CostOfLabor
+DistributionCosts
+DuesSubscriptions
+Entertainment
+EntertainmentMeals
+EquipmentRental
+ExternalServices
+ExtraordinaryCharges
+FinanceCosts
+GlobalTaxExpense
+IncomeTaxExpense
+Insurance
+InterestPaid
+LegalProfessionalFees
+LossOnDiscontinuedOperationsNetOfTax
+ManagementCompensation
+OfficeExpenses
+OfficeGeneralAdministrativeExpenses
+OtherBusinessExpenses
+OtherCurrentOperatingCharges
+OtherExternalServices
+OtherMiscellaneousServiceCost
+OtherRentalCosts
+OtherSellingExpenses
+PayrollExpenses
+ProjectStudiesSurveysAssessments
+PromotionalMeals
+PurchasesRebates
+RentOrLeaseOfBuildings
+RepairMaintenance
+ShippingAndDeliveryExpense
+ShippingFreightDelivery
+StaffCosts
+Sundry
+SuppliesMaterials
+Travel (default)
+TravelExpensesGeneralAndAdminExpenses
+TravelExpensesSellingExpense
+TravelMeals
+Utilities
+TaxesPaid
+UnappliedCashBillPaymentExpense
+Utilities
+
+Other Expense
+Default
+Amortization
+DeferredTaxExpense
+Depletion
+Depreciation (default)
+ExceptionalItems
+ExchangeGainOrLoss
+ExtraordinaryItems
+GasAndFuel
+HomeOffice
+HomeOwnerRentalInsurance
+IncomeTaxOtherExpense
+MatCredit
+MortgageInterest
+OtherHomeOfficeExpenses
+OtherVehicleExpenses
+OtherMiscellaneousExpense
+ParkingAndTolls
+PenaltiesSettlements
+PriorPeriodItems
+RentAndLease
+RepairsAndMaintenance
+TaxRoundoffGainOrLoss
+Utilities
+Vehicle
+VehicleInsurance
+VehicleLease
+VehicleLoanInterest
+VehicleLoan
+VehicleRegistration
+VehicleRepairs
+WashAndRoadServices
+
+Cost of Goods Sold
+Default
+CostOfLaborCos (default)
+CostOfSales
+EquipmentRentalCos
+FreightAndDeliveryCost
+OtherCostsOfServiceCos
+ShippingFreightDeliveryCos
+SuppliesMaterialsCogs
+
+LIABILITY
+ACCOUNT TYPE
+ACCOUNT SUB TYPE
+Accounts Payable
+Default
+Accounts Payable
+OutstandingDuesMicroSmallEnterprise
+OutstandingDuesOtherThanMicroSmallEnterprise
+
+Credit Card
+Default
+Credit Card
+
+Long Term Liability
+Default
+AccrualsAndDeferredIncome
+AccruedLongLermLiabilities
+AccruedVacationPayable
+BankLoans
+DebtsRelatedToParticipatingInterests
+DeferredTaxLiabilities
+GovernmentAndOtherPublicAuthorities
+GroupAndAssociates
+LiabilitiesRelatedToAssetsHeldForSale
+LongTermBorrowings
+LongTermDebit
+LongTermEmployeeBenefitObligations
+NotesPayable (default)
+ObligationsUnderFinanceLeases
+OtherLongTermLiabilities
+OtherLongTermProvisions
+ProvisionForLiabilities
+ProvisionsNonCurrentLiabilities
+ShareholderNotesPayable
+StaffAndRelatedLongTermLiabilityAccounts
+
+Other Current Liability
+Default
+AccruedLiabilities
+CurrentLiabilities
+CurrentPortionEmployeeBenefitsObligations
+CurrentPortionOfObligationsUnderFinanceLeases
+CurrentTaxLiability
+DirectDepositPayable
+DividendsPayable
+DutiesAndTaxes
+FederalIncomeTaxPayable
+GlobalTaxPayable
+GlobalTaxSuspense
+InsurancePayable
+InterestPayables
+LineOfCredit
+LoanPayable
+OtherCurrentLiabilities (default)
+PayrollClearing
+PayrollTaxPayable
+PrepaidExpensesPayable
+ProvisionForWarrantyObligations
+ProvisionsCurrentLiabilities
+RentsInTrustLiability
+TrustAccountsLiabilities
+SalesTaxPayable
+ShortTermBorrowings
+SocialSecurityAgencies
+StaffAndRelatedLiabilityAccounts
+StateLocalIncomeTaxPayable
+SundryDebtorsAndCreditors
+TradeAndOtherPayables
+
+REVENUE
+ACCOUNT TYPE
+ACCOUNT SUB TYPE
+Income
+Default
+CashReceiptIncome
+DiscountsRefundsGiven
+NonProfitIncome
+OperatingGrants
+OtherCurrentOperatingIncome
+OtherPrimaryIncome (default)
+OwnWorkCapitalized
+RevenueGeneral
+SalesOfProductIncome
+SalesRetail
+SalesWholesale
+SavingsByTaxScheme
+ServiceFeeIncome
+UnappliedCashPaymentIncome
+
+Other Income
+Default
+DividendIncome
+GainLossOnSaleOfFixedAssets
+GainLossOnSaleOfInvestments
+InterestEarned
+LossOnDisposalOfAssets
+OtherOperatingIncome
+OtherInvestmentIncome (default)
+OtherMiscellaneousIncome
+TaxExemptInterest
+UnrealisedLossOnSecuritiesNetOfTax
+-----END RENDERED TEXT-----
