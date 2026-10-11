@@ -1,4 +1,6 @@
-# rollup-bench
+# bolt-on-integration
+
+Governed AI pipeline and open benchmark for onboarding bolt-on acquisitions onto a PE platform: deduplicates customers and vendors, maps charts of accounts, escalates judgment calls to humans, and learns across add-ons.
 
 A benchmark scaffold for private-equity roll-up data integration: matching customer and vendor masters, and mapping charts of accounts, across a platform company and three add-ons.
 

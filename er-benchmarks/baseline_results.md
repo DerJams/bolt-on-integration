@@ -2,7 +2,7 @@
 
 Run date: 2026-10-11
 
-Command (from repo root `C:\Users\James\rollup-bench`): `uv run --with rapidfuzz --with pandas python -I scripts/er_baseline.py`
+Command (from repo root `C:\Users\James\bolt-on-integration`): `uv run --with rapidfuzz --with pandas python -I scripts/er_baseline.py`
 
 Method: rapidfuzz `fuzz.token_set_ratio` on one name/title field with `utils.default_process` (lowercase, strip non-alphanumerics), full left x right score matrix via `process.cdist`, top-1 right record per left record as the block, predicted match when the top-1 score >= threshold. Precision, recall and F1 are computed against the gold perfect mapping. The top-1 recall ceiling is the recall at threshold 0, i.e. the share of gold pairs that top-1 blocking can find at all.
 

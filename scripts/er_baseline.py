@@ -100,7 +100,7 @@ def to_markdown(results: list[dict]) -> str:
     out = [
         "# Entity-resolution fuzzy baseline results", "",
         f"Run date: {today}", "",
-        f"Command (from repo root `C:\\Users\\James\\rollup-bench`): `{COMMAND}`", "",
+        f"Command (from repo root `C:\\Users\\James\\bolt-on-integration`): `{COMMAND}`", "",
         "Method: rapidfuzz `fuzz.token_set_ratio` on one name/title field with "
         "`utils.default_process` (lowercase, strip non-alphanumerics), full "
         "left x right score matrix via `process.cdist`, top-1 right record per left "

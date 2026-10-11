@@ -5,7 +5,7 @@ Gather real public data and evidence into a versioned repo so a separate LLM can
 
 ## Repo layout to create
 ```
-rollup-bench/
+bolt-on-integration/
   README.md
   sources/           # raw downloads, untouched
   evidence/          # case-study extracts with citations
