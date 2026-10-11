@@ -1,0 +1,2 @@
+# Keep every file byte-for-byte so MANIFEST.json SHA-256 hashes hold on any OS.
+* -text
