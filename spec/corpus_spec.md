@@ -39,7 +39,7 @@ Columns as in `schemas/chart_of_accounts.md`. Charts are in `coa/`; see `coa/REA
 
 | decision | value | rationale and citation |
 |---|---|---|
-| Platform target chart | `coa/us_gaap_platform_target.csv` (270 accounts derived from the GAAP subset by the rule in `coa/README.md` section 5) | The platform sets one standard chart and each add-on is mapped onto it (`evidence/consero_rollup_checklist.md`); the full 951-row reporting taxonomy is too fine to receive many-to-one mappings, so an operating-size chart is derived from it reproducibly |
+| Platform target chart | `coa/us_gaap_platform_target.csv` (280 accounts derived from the GAAP subset by the rule and named expansion in `coa/README.md` section 5) | The platform sets one standard chart and each add-on is mapped onto it (`evidence/consero_rollup_checklist.md`); the full 951-row reporting taxonomy is too fine to receive many-to-one mappings, so an operating-size chart is derived from it reproducibly |
 | AddOn A source chart | `coa/quickbooks_online_types.csv` | QuickBooks Online is named as the transitional system small acquired entities arrive on (`evidence/pmistack_erp_consolidation.md`) |
 | AddOn B source chart | `coa/ucoa_nonprofit.csv` | Account definitions differ across systems, here net assets versus equity (`evidence/houseblend_netsuite_100day.md`) |
 | AddOn C source chart | `coa/erpnext_standard_numbered.csv` | Acquired companies run a spread of small-business ERPs with their own numbered charts, separate from the parent's (`evidence/estes_erp_pe_acquisitions.md`) |

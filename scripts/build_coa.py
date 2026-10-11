@@ -281,7 +281,7 @@ def _labels(zf: zipfile.ZipFile, member: str, role: str) -> dict[str, str]:
     return out
 
 
-def build_gaap() -> tuple[list[dict], int, set[tuple[str, str]]]:
+def build_gaap() -> tuple[list[dict], int, set[tuple[str, str]], dict[str, dict]]:
     zpath = SRC / "us_gaap_xbrl_2026" / "us-gaap-2026.zip"
     with zipfile.ZipFile(zpath) as zf:
         schema = ET.fromstring(zf.read("us-gaap-2026/elts/us-gaap-2026.xsd"))
@@ -347,7 +347,25 @@ def build_gaap() -> tuple[list[dict], int, set[tuple[str, str]]]:
 
             for r in roots:
                 walk(r, "", "")
-    return rows, dup_dropped, totals
+        # Named expansion elements may sit outside the two statement networks, so look them up in
+        # the full taxonomy and record every presentation network that carries them.
+        wanted = {e for _, e, _ in PLATFORM_NAMED_EXPANSION}
+        networks: dict[str, list[str]] = defaultdict(list)
+        for member in sorted(zf.namelist()):
+            if member.endswith(".xml") and "-pre-" in member:
+                hrefs = {e.get(XL + "href", "").split("#")[-1] for e in ET.fromstring(zf.read(member)).iter(LINK + "loc")}
+                for name in wanted:
+                    if "us-gaap_" + name in hrefs:
+                        networks[name].append(member.split("/", 1)[1])
+        named: dict[str, dict] = {}
+        for name in wanted:
+            eid = "us-gaap_" + name
+            el = elts[eid]
+            named["us-gaap:" + name] = dict(
+                row=dict(gl_code="us-gaap:" + name, account_name=std.get(eid, name), account_type="income_statement",
+                         normal_balance=el["balance"], description=doc.get(eid, ""), parent_code=""),
+                networks=networks[name])
+    return rows, dup_dropped, totals, named
 
 
 # ---------------------------------------------------------------------------
@@ -366,8 +384,27 @@ def build_gaap() -> tuple[list[dict], int, set[tuple[str, str]]]:
 # descendants (if any) dropped. All column values are copied from the subset row.
 PLATFORM_MIN_GROUP_SIZE = 35
 
+# Named expansion (also in coa/README.md section 5). Core operating expense accounts that the
+# size rule collapses away or that live outside the two statement networks. Each entry is
+# (name requested, us-gaap element used, group it is placed under). Target groups are always
+# expanded. An element already present in the size-rule output is left where it is.
+SGA = "us-gaap:SellingGeneralAndAdministrativeExpenseAbstract"
+COR = "us-gaap:CostOfRevenueAbstract"
+PLATFORM_NAMED_EXPANSION = [
+    ("SalariesAndWages", "SalariesAndWages", SGA),
+    ("EmployeeBenefitsAndShareBasedCompensation", "EmployeeBenefitsAndShareBasedCompensation", SGA),
+    ("ProfessionalFees", "ProfessionalFees", SGA),
+    ("CostOfServices", "CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization", COR),
+    ("DepreciationDepletionAndAmortization", "DepreciationAndAmortization", SGA),
+    ("OperatingLeaseExpense", "OperatingLeaseExpense", SGA),
+    ("AdvertisingExpense", "AdvertisingExpense", SGA),
+    ("GeneralInsuranceExpense", "GeneralInsuranceExpense", SGA),
+    ("ProvisionForDoubtfulAccounts", "ProvisionForDoubtfulAccounts", SGA),
+    ("TravelAndEntertainmentExpense", "TravelAndEntertainmentExpense", SGA),
+]
 
-def build_gaap_platform(rows: list[dict], totals: set[tuple[str, str]]) -> list[dict]:
+
+def build_gaap_platform(rows: list[dict], totals: set[tuple[str, str]], named: dict[str, dict]) -> list[dict]:
     by = {r["gl_code"]: r for r in rows}
     kids: dict[str, list[str]] = defaultdict(list)
     for r in rows:
@@ -381,6 +418,7 @@ def build_gaap_platform(rows: list[dict], totals: set[tuple[str, str]]) -> list[
             size_memo[c] = 1 + sum(size(k) for k in kids[c])
         return size_memo[c]
 
+    force_expand = {g for _, _, g in PLATFORM_NAMED_EXPANSION}
     out: list[dict] = []
 
     def add(code: str, parent: str, note: str) -> None:
@@ -390,7 +428,7 @@ def build_gaap_platform(rows: list[dict], totals: set[tuple[str, str]]) -> list[
         out.append(r)
 
     def visit(g: str, parent: str) -> None:
-        if size(g) >= PLATFORM_MIN_GROUP_SIZE or g not in total_of:
+        if size(g) >= PLATFORM_MIN_GROUP_SIZE or g not in total_of or g in force_expand:
             add(g, parent, "group account")
             for k in kids[g]:
                 if total_of.get(g) == k:
@@ -407,6 +445,27 @@ def build_gaap_platform(rows: list[dict], totals: set[tuple[str, str]]) -> list[
             visit(top, "")
         else:
             add(top, "", "ledger account")
+
+    present = {r["gl_code"] for r in out}
+    for _, element, group in PLATFORM_NAMED_EXPANSION:
+        code = "us-gaap:" + element
+        if code in present:
+            continue
+        r = dict(named[code]["row"])
+        r["parent_code"] = group
+        r["description"] = ("ledger account; named expansion; presented in "
+                            + ", ".join(named[code]["networks"])
+                            + (". " + r["description"] if r["description"] else ""))
+        # Insert after the end of the group's subtree so the file stays in depth-first order.
+        subtree = {group}
+        idx = next(i for i, x in enumerate(out) if x["gl_code"] == group)
+        for i in range(idx + 1, len(out)):
+            if out[i]["parent_code"] not in subtree:
+                break
+            subtree.add(out[i]["gl_code"])
+            idx = i
+        out.insert(idx + 1, r)
+        present.add(code)
     return out
 
 
@@ -414,9 +473,9 @@ def main() -> int:
     write_csv("ucoa_nonprofit.csv", build_ucoa())
     write_csv("quickbooks_online_types.csv", build_qbo())
     write_csv("erpnext_standard_numbered.csv", build_erpnext())
-    gaap_rows, dropped, totals = build_gaap()
+    gaap_rows, dropped, totals, named = build_gaap()
     write_csv("us_gaap_xbrl_2026_subset.csv", gaap_rows)
-    write_csv("us_gaap_platform_target.csv", build_gaap_platform(gaap_rows, totals))
+    write_csv("us_gaap_platform_target.csv", build_gaap_platform(gaap_rows, totals, named))
     print(f"us_gaap_xbrl_2026_subset.csv: {dropped} repeated presentation occurrences dropped (first occurrence kept)")
     return 0
 

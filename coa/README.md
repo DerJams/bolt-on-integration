@@ -16,7 +16,7 @@ Fetch date for every source below: 2026-10-11.
 
 | File | Chart | Rows | Role |
 |---|---|---|---|
-| `us_gaap_platform_target.csv` | Operating-size chart derived from the GAAP subset below (section 5) | 270 | Platform target |
+| `us_gaap_platform_target.csv` | Operating-size chart derived from the GAAP subset below, plus named core operating expense accounts (section 5) | 280 | Platform target |
 | `us_gaap_xbrl_2026_subset.csv` | FASB US GAAP Financial Reporting Taxonomy 2026, classified balance sheet + income statement | 951 | Reference: the base the platform target is derived from |
 | `quickbooks_online_types.csv` | QuickBooks Online account types and detail types (Intuit API reference) | 289 | Add-on source 1 |
 | `ucoa_nonprofit.csv` | Unified Chart of Accounts v3.0 (CAN / NCCS, Urban Institute) | 228 | Add-on source 2 |
@@ -25,7 +25,7 @@ Fetch date for every source below: 2026-10-11.
 
 ## Recommendation: target versus add-on sources
 
-- **Platform target: `us_gaap_platform_target.csv`, derived from the US GAAP XBRL 2026 subset (section 5).** Reason: the GAAP taxonomy is the only GAAP-aligned source here with stable unique IDs, a full parent/child hierarchy and a source-given debit/credit balance on every monetary element. The full 951-row subset is a reporting taxonomy, finer than every add-on chart, so a 270-account operating chart is derived from it to make many-to-one mappings possible.
+- **Platform target: `us_gaap_platform_target.csv`, derived from the US GAAP XBRL 2026 subset (section 5).** Reason: the GAAP taxonomy is the only GAAP-aligned source here with stable unique IDs, a full parent/child hierarchy and a source-given debit/credit balance on every monetary element. The full 951-row subset is a reporting taxonomy, finer than every add-on chart, so a 280-account operating chart is derived from it to make many-to-one mappings possible.
 - **Add-on sources: QuickBooks Online types, UCOA nonprofit, ERPNext numbered standard chart.** These represent three acquired entities with different bookkeeping conventions (small-business software taxonomy, nonprofit fund accounting, open-source small-business ERP with numbered accounts).
 - If the platform needs to be a QuickBooks shop instead, the QuickBooks file can serve as the target, but it holds account types and detail types only (no default account names or numbers), so it is a weaker target. No mappings have been created in either case.
 
@@ -108,21 +108,45 @@ Fetch date for every source below: 2026-10-11.
 
 ## 5. Platform target derived from the GAAP subset
 
-- **File:** `us_gaap_platform_target.csv` (270 rows: 33 group accounts, 237 ledger accounts; 74 asset, 65 liability, 37 equity, 7 temporary equity, 85 income statement, 2 untyped headers)
-- **Why:** the 951-row subset is a reporting taxonomy, not an operating chart. It is finer than every add-on chart, which leaves no room for many-to-one mappings. This file is an operating-size chart derived from it by a fixed rule. No element is added or renamed.
-- **Built by:** `build_gaap_platform()` in `scripts/build_coa.py`, from `us_gaap_xbrl_2026_subset.csv` plus the `totalLabel` arcs in the same presentation files (`stm/us-gaap-stm-sfp-cls-pre-2026.xml`, `stm/us-gaap-stm-soi-pre-2026.xml`).
-- **Selection rule:**
+- **File:** `us_gaap_platform_target.csv` (280 rows: 34 group accounts, 246 ledger accounts; 74 asset, 65 liability, 37 equity, 7 temporary equity, 95 income statement, 2 untyped headers)
+- **Why:** the 951-row subset is a reporting taxonomy, not an operating chart. It is finer than every add-on chart, which leaves no room for many-to-one mappings. This file is an operating-size chart derived from it by a fixed size rule, plus a short named list of core operating expense accounts. No element is renamed and no account is invented; every row is a real us-gaap element.
+- **Built by:** `build_gaap_platform()` in `scripts/build_coa.py`. Inputs: `us_gaap_xbrl_2026_subset.csv`, the `totalLabel` arcs in the two statement networks (`stm/us-gaap-stm-sfp-cls-pre-2026.xml`, `stm/us-gaap-stm-soi-pre-2026.xml`), and, for named elements, the label, documentation and balance from `elts/` plus every presentation network in the taxonomy zip.
+- **Size rule:**
   1. Start from the 951-row subset (section 1) without its shared root `us-gaap:StatementLineItems`. Each `[Abstract]` element is a group.
   2. A group's **total** is the child that the presentation linkbase presents with `preferredLabel="http://www.xbrl.org/2003/role/totalLabel"`. Of 169 groups, 160 have one.
   3. A group's **size** is the number of elements in its subtree within the subset (the group plus all descendants).
-  4. Walk the groups top-down, in presentation order. **Expand** a group if its size is at least **35** (`PLATFORM_MIN_GROUP_SIZE`), or if it has no total. An expanded group is written as a group account. Its total is dropped, because the group account stands for that sum. Its child groups are visited by the same rule, and its other children are written as ledger accounts. Those ledger accounts' own descendants, if any, are dropped.
+  4. Walk the groups top-down, in presentation order. **Expand** a group if any of these holds:
+     - its size is at least **35** (`PLATFORM_MIN_GROUP_SIZE`)
+     - it has no total
+     - it is a target group of the named expansion below
+
+     An expanded group is written as a group account. Its total is dropped, because the group account stands for that sum. Its child groups are visited by the same rule, and its other children are written as ledger accounts. Those ledger accounts' own descendants, if any, are dropped.
   5. Otherwise **collapse** the group: its total element is written as one ledger account, in the group's place, under the nearest expanded group.
   6. Every column value is copied from the subset row except `parent_code`, which points to the nearest kept group, and `description`, which is prefixed with `group account`, `ledger account`, or `ledger account; stands for collapsed group <QName>`.
-- **Threshold choice:** sizes 30, 35, 40 and 50 give 318, 270, 242 and 201 rows. 35 was chosen to land inside the requested 200 to 300 range. Change `PLATFORM_MIN_GROUP_SIZE` and rerun to regenerate.
-- **Effect:** 72 ledger accounts are collapsed groups. Examples: receivables fold into `us-gaap:ReceivablesNetCurrent`, and payables and accruals into `us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent`. The whole selling, general and administrative group (labor, advertising, other G&A) folds into the single ledger `us-gaap:SellingGeneralAndAdministrativeExpense`.
-- **Known limits:**
-  - The rule is structural. It keeps some industry-specific leaves that sit directly under large groups (for example crypto assets, regulatory assets, lease investment lines). These are real taxonomy elements and are left as unused targets.
-  - Some common operating concepts, for example `us-gaap:SalariesAndWages`, `us-gaap:ProfessionalFees`, `us-gaap:CostOfServices` and `us-gaap:Depreciation`, are not in these two presentation networks. So they are not in the subset or in this target.
+- **Named expansion** (`PLATFORM_NAMED_EXPANSION`):
+  7. For each entry, look up the element by name in the full taxonomy (`elts/us-gaap-2026.xsd` and the label and documentation linkbases), wherever it is presented.
+  8. If the size rule already placed the element, leave it where it is. Otherwise add it as a ledger account under the entry's target group. It goes after the group's existing subtree, with `account_type` `income_statement` and `description` prefixed `ledger account; named expansion; presented in <networks>`.
+
+| requested | element used | placed under | result | presentation networks that carry it (`dis/` disclosure, `stm/` statement; `us-gaap-` prefix and `-pre-2026.xml` suffix dropped) |
+|---|---|---|---|---|
+| `SalariesAndWages` (or `LaborAndRelatedExpense`) | `SalariesAndWages` | SG&A group | added | `dis/dis-crcgen` |
+| `EmployeeBenefitsAndShareBasedCompensation` | same | SG&A group | added | `dis/dis-crcgen` |
+| `ProfessionalFees` | same | SG&A group | added | `dis/dis-invco`, `dis/dis-otherexp`, `stm/stm-soi-int`, `stm/stm-soi-sbi` |
+| `CostOfServices` | `CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization` (`CostOfServices` does not exist in the 2026 taxonomy; this is the closest real element) | unchanged: cost-of-revenue group, under `us-gaap:CostOfGoodsAndServicesSoldAbstract` | already in size-rule output | `dis/dis-sr`, `stm/stm-soi`, `stm/stm-soi-egm` |
+| `DepreciationDepletionAndAmortization` | `DepreciationAndAmortization` (the requested element exists but is presented only in cash-flow and disclosure networks; this is its income-statement counterpart, labelled "Depreciation, Depletion and Amortization, Nonproduction") | unchanged: `us-gaap:OperatingCostsAndExpensesAbstract` | already in size-rule output | `dis/dis-sr`, `stm/stm-soi`, `stm/stm-soi-egm`, `stm/stm-soi-ins`, `stm/stm-soi-int`, `stm/stm-soi-re`, `stm/stm-soi-reit`, `stm/stm-soi-sbi` |
+| `OperatingLeaseExpense` (or occupancy) | `OperatingLeaseExpense` | SG&A group | added | `dis/dis-leas`, `dis/dis-otherexp`, `dis/dis-sr`, `stm/stm-soi`, `stm/stm-soi-egm`, `stm/stm-soi-ins`, `stm/stm-soi-re`, `stm/stm-soi-reit` |
+| `AdvertisingExpense` | same | SG&A group | added | `dis/dis-otherexp`, `dis/dis-sr`, `stm/stm-soi`, `stm/stm-soi-egm`, `stm/stm-soi-ins`, `stm/stm-soi-int`, `stm/stm-soi-re`, `stm/stm-soi-reit`, `stm/stm-soi-sbi` |
+| `GeneralInsuranceExpense` | same | SG&A group | added | `dis/dis-sr`, `stm/stm-soi`, `stm/stm-soi-egm`, `stm/stm-soi-ins`, `stm/stm-soi-re`, `stm/stm-soi-reit`, `stm/stm-soi-sbi` |
+| `ProvisionForDoubtfulAccounts` | same (current label "Accounts Receivable, Credit Loss Expense (Reversal)") | unchanged: `us-gaap:OperatingExpensesAbstract` | already in size-rule output | `dis/dis-cecl`, `dis/dis-dise`, `dis/dis-rlnro`, `dis/dis-sr`, `stm/stm-scf-indir`, `stm/stm-scf-inv`, `stm/stm-scf-re`, `stm/stm-soi`, `stm/stm-soi-egm`, `stm/stm-soi-ins`, `stm/stm-soi-re`, `stm/stm-soi-reit` |
+| `TravelAndEntertainmentExpense` | same | SG&A group | added | `dis/dis-otherexp`, `dis/dis-sr`, `stm/stm-soi`, `stm/stm-soi-egm`, `stm/stm-soi-re`, `stm/stm-soi-reit`, `stm/stm-soi-sbi` |
+
+SG&A group = `us-gaap:SellingGeneralAndAdministrativeExpenseAbstract`. Four of the added elements (`OperatingLeaseExpense`, `AdvertisingExpense`, `GeneralInsuranceExpense`, `TravelAndEntertainmentExpense`) are already in the 951-row subset, inside the SG&A group's collapsed sub-groups. They were missing only because the size rule collapsed them. The other three come from outside the two statement networks.
+
+- **Threshold choice:** before the named expansion, sizes 30, 35, 40 and 50 give 318, 270, 242 and 201 rows. 35 was chosen to land inside the requested 200 to 300 range. The named expansion adds 10 rows: SG&A becomes a group with three collapsed-total ledgers plus seven named ledgers, replacing one ledger. Change `PLATFORM_MIN_GROUP_SIZE` or the list and rerun to regenerate.
+- **Effect:**
+  - 73 ledger accounts are collapsed groups. Examples: receivables fold into `us-gaap:ReceivablesNetCurrent`, and payables and accruals into `us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent`.
+  - Inside SG&A, the collapsed totals `us-gaap:SellingAndMarketingExpense` and `us-gaap:GeneralAndAdministrativeExpense` sit beside the named accounts. In this operating chart they act as residual "other selling and marketing" and "other G&A" accounts. In the taxonomy those totals include advertising, insurance, travel and lease expense; here, amounts posted to the named accounts are not also posted to the totals.
+- **Known limits:** the size rule is structural. It keeps some industry-specific leaves that sit directly under large groups (for example crypto assets, regulatory assets, lease investment lines). These are real taxonomy elements and are left as unused targets.
 
 ## Failures
 

@@ -10,7 +10,7 @@ This repo holds the **real layer** only: public data, cited evidence, schemas, a
 |---|---|---|
 | `sources/` | raw downloads, untouched | `MANIFEST.json` (URL, date, SHA-256 per file) |
 | `entities/` | 8,800 real recipient record variants (4,035 UEIs) from USAspending federal contract awards, plus `profile.md` with naturally occurring messiness | `scripts/fetch_usaspending.py`, `scripts/build_entities.py`, `scripts/profile_entities.py` |
-| `coa/` | four real public charts of accounts as CSV (US GAAP XBRL subset, QuickBooks Online types, UCOA nonprofit, ERPNext numbered small-business chart), plus a 270-account platform target derived from the GAAP subset by a documented rule | `coa/README.md`, `scripts/build_coa.py` |
+| `coa/` | four real public charts of accounts as CSV (US GAAP XBRL subset, QuickBooks Online types, UCOA nonprofit, ERPNext numbered small-business chart), plus a 280-account platform target derived from the GAAP subset by a documented rule | `coa/README.md`, `scripts/build_coa.py` |
 | `er-benchmarks/` | Abt-Buy, Amazon-Google, DBLP-ACM with gold mappings, plus a rapidfuzz baseline | `er-benchmarks/README.md`, `scripts/er_baseline.py` |
 | `evidence/` | one-page extracts of 9 practitioner, vendor and survey sources, each with URL and fetch date | `evidence/INDEX.md` |
 | `schemas/` | field specs for the master records and charts, tied to evidence | |
@@ -33,6 +33,10 @@ Only:
 2. New files under `synthetic/`.
 
 Nothing under `sources/`, `coa/`, `entities/`, `er-benchmarks/`, `evidence/`, `schemas/` or `scripts/` may be edited. No new companies, addresses or account names may be invented; only real records may be transformed.
+
+## Before making this repo public
+
+Delete `sources/` (and rewrite git history so it is gone from past commits too) before the repo is made public. It holds third-party material whose terms do not allow republishing here: saved copies of the evidence web pages, the FASB taxonomy zip (terms not reviewed), the UCOA package (redistribution only as the complete package with its notice), and the Leipzig benchmark zips. `MANIFEST.json` keeps each file's source URL and SHA-256, so the files can be re-fetched and verified.
 
 ## Bias statement
 

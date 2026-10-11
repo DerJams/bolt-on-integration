@@ -158,8 +158,8 @@
     },
     {
       "path": "coa/README.md",
-      "bytes": 17622,
-      "sha256": "2491eda1eaf6d2ecc602aa916ad22815aaa901e0679e65a3b127e55b6483752a",
+      "bytes": 21769,
+      "sha256": "22ba3bb56e9a69e541d59128be5134ef527948c9598def0e98bb265894edacb5",
       "download_date": "2026-10-11",
       "derived_by": "hand-written provenance notes"
     },
@@ -172,8 +172,8 @@
     },
     {
       "path": "coa/us_gaap_platform_target.csv",
-      "bytes": 107229,
-      "sha256": "3c984bb187afdd8a819be4c929604e4afe163e5684ed5e5d55a9d5df27fefbb3",
+      "bytes": 111445,
+      "sha256": "36076107739c01a040b6ebde2e07fdbb4d61d986fe1f4109f01f16c353453a03",
       "download_date": "2026-10-11",
       "derived_by": "scripts/build_coa.py"
     },
