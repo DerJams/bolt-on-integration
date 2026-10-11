@@ -1,0 +1,201 @@
+item_type,item_id,outcome_label,defect_ids,rationale
+mapping,AddOnA::Bank|RentsHeldInTrust,MAP_REQUIRES_ACCOUNTING_POLICY,COA09,restricted or held-for-others cash: classification against unrestricted cash is a policy decision
+mapping,AddOnA::Bank|TrustAccounts,MAP_REQUIRES_ACCOUNTING_POLICY,COA09,restricted or held-for-others cash: classification against unrestricted cash is a policy decision
+mapping,AddOnA::Equity|AccumulatedAdjustment,MAP_REQUIRES_ACCOUNTING_POLICY,COA08,owner or partner equity in a non-corporate form: equity definition differs from the corporate target
+mapping,AddOnA::Equity|CapitalReserves,MAP_REQUIRES_ACCOUNTING_POLICY,COA08,equity reserve concept defined differently from the corporate target
+mapping,AddOnA::Equity|DividendDisbursed,MAP_MANY_TO_ONE,COA02,one of 2 source accounts rolling into Retained Earnings (Accumulated Deficit)
+mapping,AddOnA::Equity|MoneyReceivedAgainstShareWarrants,MAP_REQUIRES_ACCOUNTING_POLICY,COA09,jurisdiction-specific (non-US) concept with no settled US GAAP target
+mapping,AddOnA::Equity|OpeningBalanceEquity,MAP_REQUIRES_ACCOUNTING_POLICY,COA09,"opening-balance or temporary account: must be reclassified, no target"
+mapping,AddOnA::Equity|PartnerContributions,MAP_MANY_TO_ONE,COA02,"one of 3 source accounts rolling into Partners' Capital, Including Portion Attributable to Noncontrolling Interest"
+mapping,AddOnA::Equity|PartnerDistributions,MAP_MANY_TO_ONE,COA02,"one of 3 source accounts rolling into Partners' Capital, Including Portion Attributable to Noncontrolling Interest"
+mapping,AddOnA::Equity|PartnersEquity,MAP_MANY_TO_ONE,COA02,"one of 3 source accounts rolling into Partners' Capital, Including Portion Attributable to Noncontrolling Interest"
+mapping,AddOnA::Equity|PersonalExpense,MAP_REQUIRES_ACCOUNTING_POLICY,COA08,owner or partner equity in a non-corporate form: equity definition differs from the corporate target
+mapping,AddOnA::Equity|PreferredStock,MAP_DIRECT,COA01,"same concept as Preferred Stock, Value, Issued"
+mapping,AddOnA::Equity|RetainedEarnings,MAP_MANY_TO_ONE,COA02,one of 2 source accounts rolling into Retained Earnings (Accumulated Deficit)
+mapping,AddOnA::Equity|TreasuryStock,MAP_DIRECT,COA01,"same concept as Treasury Stock, Value"
+mapping,AddOnA::Expense|AppropriationsToDepreciation,MAP_REQUIRES_ACCOUNTING_POLICY,COA09,jurisdiction-specific (non-US) concept with no settled US GAAP target
+mapping,AddOnA::Expense|Auto,MAP_MANY_TO_ONE,COA02,one of 17 source accounts rolling into General and Administrative Expense
+mapping,AddOnA::Expense|BankCharges,MAP_MANY_TO_ONE,COA02,one of 17 source accounts rolling into General and Administrative Expense
+mapping,AddOnA::Expense|BorrowingCost,MAP_MANY_TO_ONE,COA02,one of 4 source accounts rolling into Interest and Debt Expense
+mapping,AddOnA::Expense|CharitableContributions,MAP_MANY_TO_ONE,COA02,one of 6 source accounts rolling into Other General Expense
+mapping,AddOnA::Expense|CommissionsAndFees,MAP_SPLIT_REQUIRED,COA03,balance must be divided across Selling and Marketing Expense and General and Administrative Expense
+mapping,AddOnA::Expense|DistributionCosts,MAP_MANY_TO_ONE,COA02,one of 4 source accounts rolling into Selling and Marketing Expense
+mapping,AddOnA::Expense|DuesSubscriptions,MAP_MANY_TO_ONE,COA02,one of 17 source accounts rolling into General and Administrative Expense
+mapping,AddOnA::Expense|ExternalServices,MAP_MANY_TO_ONE,COA02,one of 4 source accounts rolling into Professional and Contracted Services Expense
+mapping,AddOnA::Expense|FinanceCosts,MAP_MANY_TO_ONE,COA02,one of 4 source accounts rolling into Interest and Debt Expense
+mapping,AddOnA::Expense|Insurance,MAP_MANY_TO_ONE,COA02,one of 2 source accounts rolling into General Insurance Expense
+mapping,AddOnA::Expense|InterestPaid,MAP_MANY_TO_ONE,COA02,one of 4 source accounts rolling into Interest and Debt Expense
+mapping,AddOnA::Expense|LegalProfessionalFees,MAP_SPLIT_REQUIRED,COA03,balance must be divided across Legal Fees and Professional Fees
+mapping,AddOnA::Expense|OfficeExpenses,MAP_MANY_TO_ONE,COA02,one of 17 source accounts rolling into General and Administrative Expense
+mapping,AddOnA::Expense|OfficeGeneralAdministrativeExpenses,MAP_MANY_TO_ONE,COA02,one of 17 source accounts rolling into General and Administrative Expense
+mapping,AddOnA::Expense|OtherBusinessExpenses,MAP_MANY_TO_ONE,COA02,one of 6 source accounts rolling into Other General Expense
+mapping,AddOnA::Expense|OtherCurrentOperatingCharges,MAP_MANY_TO_ONE,COA02,one of 6 source accounts rolling into Other General Expense
+mapping,AddOnA::Expense|OtherExternalServices,MAP_MANY_TO_ONE,COA02,one of 4 source accounts rolling into Professional and Contracted Services Expense
+mapping,AddOnA::Expense|OtherMiscellaneousServiceCost,MAP_MANY_TO_ONE,COA02,one of 4 source accounts rolling into Professional and Contracted Services Expense
+mapping,AddOnA::Expense|OtherSellingExpenses,MAP_MANY_TO_ONE,COA02,one of 4 source accounts rolling into Selling and Marketing Expense
+mapping,AddOnA::Expense|ProjectStudiesSurveysAssessments,MAP_MANY_TO_ONE,COA02,one of 4 source accounts rolling into Professional and Contracted Services Expense
+mapping,AddOnA::Expense|PurchasesRebates,MAP_REQUIRES_ACCOUNTING_POLICY,COA09,purchase rebates change margin; netting against cost is a policy choice
+mapping,AddOnA::Expense|RepairMaintenance,MAP_MANY_TO_ONE,COA02,one of 17 source accounts rolling into General and Administrative Expense
+mapping,AddOnA::Expense|ShippingAndDeliveryExpense,MAP_MANY_TO_ONE,COA02,one of 4 source accounts rolling into Selling and Marketing Expense
+mapping,AddOnA::Expense|ShippingFreightDelivery,MAP_MANY_TO_ONE,COA02,one of 4 source accounts rolling into Selling and Marketing Expense
+mapping,AddOnA::Expense|Sundry,MAP_MANY_TO_ONE,COA02,one of 6 source accounts rolling into Other General Expense
+mapping,AddOnA::Expense|SuppliesMaterials,MAP_MANY_TO_ONE,COA02,one of 17 source accounts rolling into General and Administrative Expense
+mapping,AddOnA::Expense|TaxesPaid,MAP_REQUIRES_ACCOUNTING_POLICY,COA09,tax type (income or other) not stated: target depends on it
+mapping,AddOnA::Expense|UnappliedCashBillPaymentExpense,MAP_REQUIRES_ACCOUNTING_POLICY,COA09,"system clearing or suspense account: should net to zero, no target; reclassify by policy"
+mapping,AddOnA::Expense|Utilities,MAP_MANY_TO_ONE,COA02,one of 17 source accounts rolling into General and Administrative Expense
+mapping,AddOnA::Fixed Asset|NonCurrentAssets,MAP_MANY_TO_ONE,COA02,"one of 3 source accounts rolling into Other Assets, Noncurrent"
+mapping,AddOnA::Fixed Asset|ParticipatingInterests,MAP_REQUIRES_ACCOUNTING_POLICY,COA07,related-party or intercompany balance: needs an elimination or presentation rule
+mapping,AddOnA::Income|NonProfitIncome,MAP_REQUIRES_ACCOUNTING_POLICY,COA08,nonprofit contribution or net-asset accounting (ASC 958) has no for-profit counterpart
+mapping,AddOnA::Income|OtherCurrentOperatingIncome,MAP_MANY_TO_ONE,COA02,one of 2 source accounts rolling into Other Operating Income
+mapping,AddOnA::Income|UnappliedCashPaymentIncome,MAP_REQUIRES_ACCOUNTING_POLICY,COA09,"system clearing or suspense account: should net to zero, no target; reclassify by policy"
+mapping,AddOnA::Long Term Liability|DeferredTaxLiabilities,MAP_DIRECT,COA01,"same concept as Deferred Income Tax Liabilities, Net"
+mapping,AddOnA::Long Term Liability|GovernmentAndOtherPublicAuthorities,MAP_REQUIRES_ACCOUNTING_POLICY,COA09,jurisdiction-specific (non-US) concept with no settled US GAAP target
+mapping,AddOnA::Long Term Liability|GroupAndAssociates,MAP_REQUIRES_ACCOUNTING_POLICY,COA07,related-party or intercompany balance: needs an elimination or presentation rule
+mapping,AddOnA::Long Term Liability|LiabilitiesRelatedToAssetsHeldForSale,MAP_REQUIRES_ACCOUNTING_POLICY,COA09,source concept is ambiguous; no settled target
+mapping,AddOnA::Long Term Liability|OtherLongTermLiabilities,MAP_DIRECT,COA01,"same concept as Other Liabilities, Noncurrent"
+mapping,AddOnA::Other Asset|AccumulatedAmortizationOfOtherAssets,MAP_MANY_TO_ONE,COA02,"one of 3 source accounts rolling into Other Assets, Noncurrent"
+mapping,AddOnA::Other Asset|AssetsHeldForSale,MAP_MANY_TO_ONE,COA02,"one of 2 source accounts rolling into Asset, Held-for-Sale, Not Part of Disposal Group, Current"
+mapping,AddOnA::Other Asset|LongTermLoansAndAdvancesToRelatedParties,MAP_REQUIRES_ACCOUNTING_POLICY,COA07,related-party or intercompany balance: needs an elimination or presentation rule
+mapping,AddOnA::Other Asset|OtherLongTermAssets,MAP_MANY_TO_ONE,COA02,"one of 3 source accounts rolling into Other Assets, Noncurrent"
+mapping,AddOnA::Other Asset|ProvisionsNonCurrentAssets,MAP_REQUIRES_ACCOUNTING_POLICY,COA09,"IFRS-style provision: US GAAP recognition differs, no settled target"
+mapping,AddOnA::Other Current Asset|AssetsAvailableForSale,MAP_MANY_TO_ONE,COA02,"one of 2 source accounts rolling into Asset, Held-for-Sale, Not Part of Disposal Group, Current"
+mapping,AddOnA::Other Current Asset|BalWithGovtAuthorities,MAP_REQUIRES_ACCOUNTING_POLICY,COA09,jurisdiction-specific (non-US) concept with no settled US GAAP target
+mapping,AddOnA::Other Current Asset|DevelopmentCosts,MAP_REQUIRES_ACCOUNTING_POLICY,COA09,capitalisation versus expense is a policy choice under US GAAP
+mapping,AddOnA::Other Current Asset|Investment_Other,MAP_REQUIRES_ACCOUNTING_POLICY,COA09,debt/equity security classification (ASC 320/321) decides the target
+mapping,AddOnA::Other Current Asset|LoansToOfficers,MAP_REQUIRES_ACCOUNTING_POLICY,COA07,related-party or intercompany balance: needs an elimination or presentation rule
+mapping,AddOnA::Other Current Asset|LoansToStockholders,MAP_REQUIRES_ACCOUNTING_POLICY,COA07,related-party or intercompany balance: needs an elimination or presentation rule
+mapping,AddOnA::Other Current Asset|OtherConsumables,MAP_MANY_TO_ONE,COA02,"one of 2 source accounts rolling into Other Assets, Current"
+mapping,AddOnA::Other Current Asset|OtherCurrentAssets,MAP_MANY_TO_ONE,COA02,"one of 2 source accounts rolling into Other Assets, Current"
+mapping,AddOnA::Other Current Asset|ProvisionsCurrentAssets,MAP_REQUIRES_ACCOUNTING_POLICY,COA09,"IFRS-style provision: US GAAP recognition differs, no settled target"
+mapping,AddOnA::Other Current Liability|CurrentLiabilities,MAP_MANY_TO_ONE,COA02,"one of 3 source accounts rolling into Other Liabilities, Current"
+mapping,AddOnA::Other Current Liability|CurrentPortionEmployeeBenefitsObligations,MAP_MANY_TO_ONE,COA02,"one of 13 source accounts rolling into Accounts Payable and Accrued Liabilities, Current"
+mapping,AddOnA::Other Current Liability|CurrentTaxLiability,MAP_MANY_TO_ONE,COA02,"one of 13 source accounts rolling into Accounts Payable and Accrued Liabilities, Current"
+mapping,AddOnA::Other Current Liability|DirectDepositPayable,MAP_MANY_TO_ONE,COA02,"one of 13 source accounts rolling into Accounts Payable and Accrued Liabilities, Current"
+mapping,AddOnA::Other Current Liability|DividendsPayable,MAP_MANY_TO_ONE,COA02,"one of 13 source accounts rolling into Accounts Payable and Accrued Liabilities, Current"
+mapping,AddOnA::Other Current Liability|DutiesAndTaxes,MAP_MANY_TO_ONE,COA02,"one of 13 source accounts rolling into Accounts Payable and Accrued Liabilities, Current"
+mapping,AddOnA::Other Current Liability|FederalIncomeTaxPayable,MAP_MANY_TO_ONE,COA02,"one of 13 source accounts rolling into Accounts Payable and Accrued Liabilities, Current"
+mapping,AddOnA::Other Current Liability|InsurancePayable,MAP_MANY_TO_ONE,COA02,"one of 13 source accounts rolling into Accounts Payable and Accrued Liabilities, Current"
+mapping,AddOnA::Other Current Liability|InterestPayables,MAP_MANY_TO_ONE,COA02,"one of 13 source accounts rolling into Accounts Payable and Accrued Liabilities, Current"
+mapping,AddOnA::Other Current Liability|OtherCurrentLiabilities,MAP_MANY_TO_ONE,COA02,"one of 3 source accounts rolling into Other Liabilities, Current"
+mapping,AddOnA::Other Current Liability|PayrollClearing,MAP_REQUIRES_ACCOUNTING_POLICY,COA09,"system clearing or suspense account: should net to zero, no target; reclassify by policy"
+mapping,AddOnA::Other Current Liability|PayrollTaxPayable,MAP_MANY_TO_ONE,COA02,"one of 13 source accounts rolling into Accounts Payable and Accrued Liabilities, Current"
+mapping,AddOnA::Other Current Liability|ProvisionForWarrantyObligations,MAP_MANY_TO_ONE,COA02,"one of 3 source accounts rolling into Other Liabilities, Current"
+mapping,AddOnA::Other Current Liability|SalesTaxPayable,MAP_MANY_TO_ONE,COA02,"one of 13 source accounts rolling into Accounts Payable and Accrued Liabilities, Current"
+mapping,AddOnA::Other Current Liability|SocialSecurityAgencies,MAP_MANY_TO_ONE,COA02,"one of 13 source accounts rolling into Accounts Payable and Accrued Liabilities, Current"
+mapping,AddOnA::Other Current Liability|StaffAndRelatedLiabilityAccounts,MAP_MANY_TO_ONE,COA02,"one of 13 source accounts rolling into Accounts Payable and Accrued Liabilities, Current"
+mapping,AddOnA::Other Current Liability|StateLocalIncomeTaxPayable,MAP_MANY_TO_ONE,COA02,"one of 13 source accounts rolling into Accounts Payable and Accrued Liabilities, Current"
+mapping,AddOnA::Other Current Liability|SundryDebtorsAndCreditors,MAP_REQUIRES_ACCOUNTING_POLICY,COA09,source concept is ambiguous; no settled target
+mapping,AddOnA::Other Expense|ExceptionalItems,MAP_REQUIRES_ACCOUNTING_POLICY,COA09,extraordinary or exceptional items are not a US GAAP category: reclassify by policy
+mapping,AddOnA::Other Expense|GasAndFuel,MAP_MANY_TO_ONE,COA02,one of 17 source accounts rolling into General and Administrative Expense
+mapping,AddOnA::Other Expense|OtherMiscellaneousExpense,MAP_MANY_TO_ONE,COA02,one of 6 source accounts rolling into Other General Expense
+mapping,AddOnA::Other Expense|OtherVehicleExpenses,MAP_MANY_TO_ONE,COA02,one of 17 source accounts rolling into General and Administrative Expense
+mapping,AddOnA::Other Expense|ParkingAndTolls,MAP_MANY_TO_ONE,COA02,one of 17 source accounts rolling into General and Administrative Expense
+mapping,AddOnA::Other Expense|PenaltiesSettlements,MAP_MANY_TO_ONE,COA02,one of 6 source accounts rolling into Other General Expense
+mapping,AddOnA::Other Expense|RepairsAndMaintenance,MAP_MANY_TO_ONE,COA02,one of 17 source accounts rolling into General and Administrative Expense
+mapping,AddOnA::Other Expense|Utilities,MAP_MANY_TO_ONE,COA02,one of 17 source accounts rolling into General and Administrative Expense
+mapping,AddOnA::Other Expense|Vehicle,MAP_MANY_TO_ONE,COA02,one of 17 source accounts rolling into General and Administrative Expense
+mapping,AddOnA::Other Expense|VehicleInsurance,MAP_MANY_TO_ONE,COA02,one of 2 source accounts rolling into General Insurance Expense
+mapping,AddOnA::Other Expense|VehicleLoanInterest,MAP_MANY_TO_ONE,COA02,one of 4 source accounts rolling into Interest and Debt Expense
+mapping,AddOnA::Other Expense|VehicleRegistration,MAP_MANY_TO_ONE,COA02,one of 17 source accounts rolling into General and Administrative Expense
+mapping,AddOnA::Other Expense|VehicleRepairs,MAP_MANY_TO_ONE,COA02,one of 17 source accounts rolling into General and Administrative Expense
+mapping,AddOnA::Other Expense|WashAndRoadServices,MAP_MANY_TO_ONE,COA02,one of 17 source accounts rolling into General and Administrative Expense
+mapping,AddOnA::Other Income|GainLossOnSaleOfFixedAssets,MAP_MANY_TO_ONE,COA02,one of 2 source accounts rolling into Gain (Loss) on Disposition of Assets
+mapping,AddOnA::Other Income|LossOnDisposalOfAssets,MAP_MANY_TO_ONE,COA02,one of 2 source accounts rolling into Gain (Loss) on Disposition of Assets
+mapping,AddOnA::Other Income|OtherMiscellaneousIncome,MAP_DIRECT,COA01,same concept as Other Nonoperating Income (Expense)
+mapping,AddOnA::Other Income|OtherOperatingIncome,MAP_MANY_TO_ONE,COA02,one of 2 source accounts rolling into Other Operating Income
+mapping,AddOnA::cash_basis::us-gaap:IntangibleAssetsNetExcludingGoodwill,MAP_REQUIRES_ACCOUNTING_POLICY,COA05,source is cash-basis; accrual conversion required
+mapping,AddOnA::cash_basis::us-gaap:PrepaidExpenseCurrent,MAP_REQUIRES_ACCOUNTING_POLICY,COA05,source is cash-basis; accrual conversion required
+mapping,AddOnB::1210,MAP_REQUIRES_ACCOUNTING_POLICY,COA08,nonprofit contribution or net-asset accounting (ASC 958) has no for-profit counterpart
+mapping,AddOnB::1215,MAP_REQUIRES_ACCOUNTING_POLICY,COA08,nonprofit contribution or net-asset accounting (ASC 958) has no for-profit counterpart
+mapping,AddOnB::1225,MAP_REQUIRES_ACCOUNTING_POLICY,COA08,nonprofit contribution or net-asset accounting (ASC 958) has no for-profit counterpart
+mapping,AddOnB::1240,MAP_REQUIRES_ACCOUNTING_POLICY,COA08,nonprofit contribution or net-asset accounting (ASC 958) has no for-profit counterpart
+mapping,AddOnB::1450,MAP_DIRECT,COA01,"same concept as Prepaid Expense, Current"
+mapping,AddOnB::1850,MAP_REQUIRES_ACCOUNTING_POLICY,COA08,nonprofit contribution or net-asset accounting (ASC 958) has no for-profit counterpart
+mapping,AddOnB::2510,MAP_REQUIRES_ACCOUNTING_POLICY,COA07,related-party or intercompany balance: needs an elimination or presentation rule
+mapping,AddOnB::2550,MAP_DIRECT,COA01,same concept as Short-Term Debt
+mapping,AddOnB::2570,MAP_DIRECT,COA01,"same concept as Other Liabilities, Current"
+mapping,AddOnB::2610,MAP_REQUIRES_ACCOUNTING_POLICY,COA08,nonprofit contribution or net-asset accounting (ASC 958) has no for-profit counterpart
+mapping,AddOnB::2810,MAP_REQUIRES_ACCOUNTING_POLICY,COA09,source concept is ambiguous; no settled target
+mapping,AddOnB::3020,MAP_REQUIRES_ACCOUNTING_POLICY,COA08,nonprofit contribution or net-asset accounting (ASC 958) has no for-profit counterpart
+mapping,AddOnB::3040,MAP_REQUIRES_ACCOUNTING_POLICY,COA08,nonprofit contribution or net-asset accounting (ASC 958) has no for-profit counterpart
+mapping,AddOnB::3110,MAP_REQUIRES_ACCOUNTING_POLICY,COA08,nonprofit contribution or net-asset accounting (ASC 958) has no for-profit counterpart
+mapping,AddOnB::3210,MAP_REQUIRES_ACCOUNTING_POLICY,COA08,nonprofit contribution or net-asset accounting (ASC 958) has no for-profit counterpart
+mapping,AddOnB::4010,MAP_REQUIRES_ACCOUNTING_POLICY,COA08,nonprofit contribution or net-asset accounting (ASC 958) has no for-profit counterpart
+mapping,AddOnB::4070,MAP_REQUIRES_ACCOUNTING_POLICY,COA08,nonprofit contribution or net-asset accounting (ASC 958) has no for-profit counterpart
+mapping,AddOnB::4075,MAP_REQUIRES_ACCOUNTING_POLICY,COA08,nonprofit contribution or net-asset accounting (ASC 958) has no for-profit counterpart
+mapping,AddOnB::4120,MAP_REQUIRES_ACCOUNTING_POLICY,COA08,nonprofit contribution or net-asset accounting (ASC 958) has no for-profit counterpart
+mapping,AddOnB::4140,MAP_REQUIRES_ACCOUNTING_POLICY,COA08,nonprofit contribution or net-asset accounting (ASC 958) has no for-profit counterpart
+mapping,AddOnB::4150,MAP_REQUIRES_ACCOUNTING_POLICY,COA08,nonprofit contribution or net-asset accounting (ASC 958) has no for-profit counterpart
+mapping,AddOnB::4420,MAP_REQUIRES_ACCOUNTING_POLICY,COA07,related-party or intercompany balance: needs an elimination or presentation rule
+mapping,AddOnB::4430,MAP_REQUIRES_ACCOUNTING_POLICY,COA08,nonprofit contribution or net-asset accounting (ASC 958) has no for-profit counterpart
+mapping,AddOnB::4510,MAP_REQUIRES_ACCOUNTING_POLICY,COA08,nonprofit contribution or net-asset accounting (ASC 958) has no for-profit counterpart
+mapping,AddOnB::5220,MAP_REQUIRES_ACCOUNTING_POLICY,COA08,nonprofit contribution or net-asset accounting (ASC 958) has no for-profit counterpart
+mapping,AddOnB::5310,MAP_MANY_TO_ONE,COA02,"one of 3 source accounts rolling into Investment Income, Net"
+mapping,AddOnB::5320,MAP_MANY_TO_ONE,COA02,"one of 3 source accounts rolling into Investment Income, Net"
+mapping,AddOnB::5330,MAP_MANY_TO_ONE,COA02,"one of 6 source accounts rolling into Rental Income, Nonoperating"
+mapping,AddOnB::5335,MAP_MANY_TO_ONE,COA02,"one of 6 source accounts rolling into Rental Income, Nonoperating"
+mapping,AddOnB::5340,MAP_MANY_TO_ONE,COA02,"one of 6 source accounts rolling into Rental Income, Nonoperating"
+mapping,AddOnB::5345,MAP_MANY_TO_ONE,COA02,"one of 6 source accounts rolling into Rental Income, Nonoperating"
+mapping,AddOnB::5350,MAP_MANY_TO_ONE,COA02,"one of 6 source accounts rolling into Rental Income, Nonoperating"
+mapping,AddOnB::5355,MAP_MANY_TO_ONE,COA02,"one of 6 source accounts rolling into Rental Income, Nonoperating"
+mapping,AddOnB::5360,MAP_MANY_TO_ONE,COA02,"one of 3 source accounts rolling into Investment Income, Net"
+mapping,AddOnB::5460,MAP_REQUIRES_ACCOUNTING_POLICY,COA07,related-party or intercompany balance: needs an elimination or presentation rule
+mapping,AddOnB::5490,MAP_DIRECT,COA01,same concept as Other Operating Income
+mapping,AddOnB::5810,MAP_REQUIRES_ACCOUNTING_POLICY,COA08,nonprofit contribution or net-asset accounting (ASC 958) has no for-profit counterpart
+mapping,AddOnB::7010,MAP_REQUIRES_ACCOUNTING_POLICY,COA09,program expense: cost of revenue versus operating expense is not settled
+mapping,AddOnB::7020,MAP_REQUIRES_ACCOUNTING_POLICY,COA08,nonprofit contribution or net-asset accounting (ASC 958) has no for-profit counterpart
+mapping,AddOnB::7040,MAP_REQUIRES_ACCOUNTING_POLICY,COA08,nonprofit contribution or net-asset accounting (ASC 958) has no for-profit counterpart
+mapping,AddOnB::7210,MAP_MANY_TO_ONE,COA02,"one of 2 source accounts rolling into Salary and Wage, NonOfficer, Excluding Cost of Good and Service Sold"
+mapping,AddOnB::7220,MAP_MANY_TO_ONE,COA02,"one of 2 source accounts rolling into Salary and Wage, NonOfficer, Excluding Cost of Good and Service Sold"
+mapping,AddOnB::7520,MAP_MANY_TO_ONE,COA02,one of 2 source accounts rolling into Professional Fees
+mapping,AddOnB::7540,MAP_MANY_TO_ONE,COA02,one of 2 source accounts rolling into Professional Fees
+mapping,AddOnB::7550,MAP_MANY_TO_ONE,COA02,one of 2 source accounts rolling into Professional and Contracted Services Expense
+mapping,AddOnB::8110,MAP_MANY_TO_ONE,COA02,one of 15 source accounts rolling into General and Administrative Expense
+mapping,AddOnB::8130,MAP_MANY_TO_ONE,COA02,one of 15 source accounts rolling into General and Administrative Expense
+mapping,AddOnB::8140,MAP_MANY_TO_ONE,COA02,one of 15 source accounts rolling into General and Administrative Expense
+mapping,AddOnB::8150,MAP_MANY_TO_ONE,COA02,one of 15 source accounts rolling into General and Administrative Expense
+mapping,AddOnB::8170,MAP_MANY_TO_ONE,COA02,one of 15 source accounts rolling into General and Administrative Expense
+mapping,AddOnB::8180,MAP_MANY_TO_ONE,COA02,one of 15 source accounts rolling into General and Administrative Expense
+mapping,AddOnB::8190,MAP_MANY_TO_ONE,COA02,one of 15 source accounts rolling into General and Administrative Expense
+mapping,AddOnB::8210,MAP_DIRECT,COA01,"same concept as Operating Lease, Expense"
+mapping,AddOnB::8220,MAP_MANY_TO_ONE,COA02,one of 15 source accounts rolling into General and Administrative Expense
+mapping,AddOnB::8230,MAP_MANY_TO_ONE,COA02,one of 15 source accounts rolling into General and Administrative Expense
+mapping,AddOnB::8240,MAP_MANY_TO_ONE,COA02,one of 15 source accounts rolling into General and Administrative Expense
+mapping,AddOnB::8250,MAP_MANY_TO_ONE,COA02,one of 2 source accounts rolling into Interest and Debt Expense
+mapping,AddOnB::8260,MAP_SPLIT_REQUIRED,COA03,"balance must be divided across Operating Lease, Expense and General and Administrative Expense"
+mapping,AddOnB::8310,MAP_MANY_TO_ONE,COA02,one of 2 source accounts rolling into Travel and Entertainment Expense
+mapping,AddOnB::8320,MAP_MANY_TO_ONE,COA02,one of 2 source accounts rolling into Travel and Entertainment Expense
+mapping,AddOnB::8510,MAP_MANY_TO_ONE,COA02,one of 2 source accounts rolling into Interest and Debt Expense
+mapping,AddOnB::8520,MAP_DIRECT,COA01,same concept as General Insurance Expense
+mapping,AddOnB::8530,MAP_MANY_TO_ONE,COA02,one of 15 source accounts rolling into General and Administrative Expense
+mapping,AddOnB::8540,MAP_MANY_TO_ONE,COA02,one of 15 source accounts rolling into General and Administrative Expense
+mapping,AddOnB::8560,MAP_MANY_TO_ONE,COA02,one of 2 source accounts rolling into Professional and Contracted Services Expense
+mapping,AddOnB::8620,MAP_MANY_TO_ONE,COA02,one of 15 source accounts rolling into General and Administrative Expense
+mapping,AddOnB::8650,MAP_MANY_TO_ONE,COA02,one of 15 source accounts rolling into General and Administrative Expense
+mapping,AddOnB::8670,MAP_MANY_TO_ONE,COA02,one of 15 source accounts rolling into General and Administrative Expense
+mapping,AddOnB::9820,MAP_REQUIRES_ACCOUNTING_POLICY,COA09,non-GAAP capital purchase expensed in the source: must be capitalised by policy
+mapping,AddOnB::9830,MAP_REQUIRES_ACCOUNTING_POLICY,COA09,non-GAAP capital purchase expensed in the source: must be capitalised by policy
+mapping,AddOnB::9840,MAP_REQUIRES_ACCOUNTING_POLICY,COA09,non-GAAP capital purchase expensed in the source: must be capitalised by policy
+mapping,AddOnB::9910,MAP_REQUIRES_ACCOUNTING_POLICY,COA07,related-party or intercompany balance: needs an elimination or presentation rule
+mapping,AddOnC::1110,MAP_DIRECT,COA01,"same concept as Cash, Cash Equivalents, and Short-Term Investments"
+mapping,AddOnC::1770,MAP_REQUIRES_ACCOUNTING_POLICY,COA09,software may be property and equipment or an intangible: classification policy
+mapping,AddOnC::1910,MAP_REQUIRES_ACCOUNTING_POLICY,COA09,"opening-balance or temporary account: must be reclassified, no target"
+mapping,AddOnC::3100,MAP_DIRECT,COA01,"same concept as Common Stock, Value, Issued"
+mapping,AddOnC::3300,MAP_REQUIRES_ACCOUNTING_POLICY,COA09,"opening-balance or temporary account: must be reclassified, no target"
+mapping,AddOnC::4110,MAP_MANY_TO_ONE,COA02,one of 2 source accounts rolling into Revenues
+mapping,AddOnC::4120,MAP_MANY_TO_ONE,COA02,one of 2 source accounts rolling into Revenues
+mapping,AddOnC::5201,MAP_MANY_TO_ONE,COA02,one of 6 source accounts rolling into General and Administrative Expense
+mapping,AddOnC::5202,MAP_MANY_TO_ONE,COA02,one of 4 source accounts rolling into Selling and Marketing Expense
+mapping,AddOnC::5203,MAP_SPLIT_REQUIRED,COA03,"balance must be divided across Cost, Depreciation, Amortization and Depletion and Depreciation, Depletion and Amortization, Nonproduction"
+mapping,AddOnC::5205,MAP_MANY_TO_ONE,COA02,one of 4 source accounts rolling into Selling and Marketing Expense
+mapping,AddOnC::5207,MAP_MANY_TO_ONE,COA02,one of 4 source accounts rolling into Selling and Marketing Expense
+mapping,AddOnC::5208,MAP_MANY_TO_ONE,COA02,one of 6 source accounts rolling into General and Administrative Expense
+mapping,AddOnC::5209,MAP_DIRECT,COA01,"same concept as Operating Lease, Expense"
+mapping,AddOnC::5210,MAP_MANY_TO_ONE,COA02,one of 6 source accounts rolling into General and Administrative Expense
+mapping,AddOnC::5211,MAP_MANY_TO_ONE,COA02,one of 6 source accounts rolling into General and Administrative Expense
+mapping,AddOnC::5213,MAP_DIRECT,COA01,"same concept as Salary and Wage, NonOfficer, Excluding Cost of Good and Service Sold"
+mapping,AddOnC::5214,MAP_MANY_TO_ONE,COA02,one of 4 source accounts rolling into Selling and Marketing Expense
+mapping,AddOnC::5215,MAP_MANY_TO_ONE,COA02,one of 6 source accounts rolling into General and Administrative Expense
+mapping,AddOnC::5217,MAP_MANY_TO_ONE,COA02,one of 6 source accounts rolling into General and Administrative Expense
+mapping,AddOnC::5218,MAP_REQUIRES_ACCOUNTING_POLICY,COA09,source concept is ambiguous; no settled target
+mapping,AddOnC::5219,MAP_DIRECT,COA01,"same concept as Gain (Loss), Foreign Currency Transaction, before Tax"

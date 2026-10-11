@@ -25,6 +25,16 @@ MAX_ATTEMPTS = 1000
 CV07_RATE, CV07_MIN, CV07_MAX = 0.05, 0.02, 0.08
 DEV_SHARE, SPLIT_TOLERANCE, COA_SPLIT_TOLERANCE = 0.60, 0.02, 0.05
 HIDDEN = ["source_record_id", "true_recipient_uei", "defect_ids"]
+IDENTIFIER_COLUMNS = ["recipient_uei", "recipient_duns", "cage_code", "recipient_parent_uei", "recipient_parent_duns"]
+# Track A (shared-identifier): UEI visible, CV07 blanks it on 5% of records; tests escalation when an identifier exists.
+# Track B (no-shared-identifier): every identifier column removed from the inputs; the realistic configuration and the
+# headline. CV07 does not apply. Same seed, partition, split, clusters and negatives as track A.
+TRACKS = {
+    "track_a": {"name": "shared-identifier", "drop": [], "cv07": True, "stream": lambda s: s,
+                "id_range": range(100000, 1000000)},
+    "track_b": {"name": "no-shared-identifier", "drop": IDENTIFIER_COLUMNS, "cv07": False,
+                "stream": lambda s: f"{s}:track_b", "id_range": range(1000000, 10000000)},
+}
 
 CHARTS = {  # spec/corpus_spec.md section 2.2
     "PlatformCo": "us_gaap_platform_target.csv",
@@ -377,20 +387,40 @@ def uei_links(rows, by_uei):
 
 
 def uei_pair_kind(links):
-    """Ground truth for a different-UEI pair. Precedence: name similarity (CV06, owner rule) >
-    reported hierarchy (CV09) > shared address (profile leaves unresolved)."""
+    """Ground truth for a different-UEI pair. Precedence (repo owner, 2026-10-11): a reported parent-child
+    relationship (one UEI's records name the other as parent) is known, so it is CV09 non-match even when the
+    names match; then name similarity (CV06, unknown); then siblings (CV09); then shared address (unknown)."""
     kind = {}
     for p in sorted(links["same_addr"]):
         kind[p] = ("unknown", "same_address")
     for p in sorted(links["siblings"]):
         kind[p] = ("non-match", "sibling")
-    for p in sorted(links["parent_child"]):
-        kind[p] = ("non-match", "parent_child")
     for p in sorted(links["near_name"]):
         kind[p] = ("unknown", "near_name")
     for p in sorted(links["same_name"]):
         kind[p] = ("unknown", "same_name")
+    named = links["same_name"] | links["near_name"]
+    for p in sorted(links["parent_child"]):
+        kind[p] = ("non-match", "parent_child_same_name" if p in named else "parent_child")
     return kind
+
+
+def pair_label(cfg, truth, k, tags):
+    """Decision label for a pair item, from what the system under test can see in this track."""
+    if "CV07" in tags:
+        return "ESCALATE_AMBIGUOUS", "primary identifier missing on at least one record"
+    if k == "parent_child_same_name":
+        return ("ESCALATE_POLICY_DECISION", "reported parent-child relationship between entities with the same or "
+                "near-same name: keeping them separate or rolling up is a policy decision")
+    if k in ("same_name", "near_name"):
+        return "DO_NOT_MERGE_CONFLICTING_IDENTIFIER", f"{k.replace('_', ' ')} but different UEIs; identity not established"
+    if k in ("parent_child", "sibling"):
+        return "AUTO_RESOLVE_NON_MATCH", f"reported corporate hierarchy ({k.replace('_', '-')}); distinct UEIs"
+    if truth == "match":
+        if "CV04" in tags and cfg["drop"]:
+            return "ESCALATE_AMBIGUOUS", "trading name differs from legal name and no identifier is visible (CV04 rule)"
+        return "AUTO_RESOLVE_MATCH", "same UEI"
+    return "AUTO_RESOLVE_NON_MATCH", "different UEIs, no name, address or hierarchy link"
 
 
 # ---------------------------------------------------------------------------------------------
@@ -443,14 +473,7 @@ def main():
                  "parent_child_record_pairs_split": pc_split,
                  "parent_child_record_pairs_kept": len(pc_rec_pairs) - pc_split}
 
-    # Record ids: per-entity prefix + random 6-digit number, so ids carry no cluster information.
-    r_ids = rng(seed, "ids")
-    new_id = {}
-    for e in ENTITIES:
-        recs = sorted(r["record_id"] for r in rows if entity_of[r["record_id"]] == e)
-        nums = r_ids.sample(range(100000, 1000000), len(recs))
-        for rid, n in zip(recs, nums):
-            new_id[rid] = f"{ID_PREFIX[e]}-{n}"
+    # Record ids (per track, below): per-entity prefix + random 6-digit number, carrying no cluster information.
     true_uei = {r["record_id"]: r["recipient_uei"] for r in rows}
 
     # Task 2, CV07: blank the primary UEI on a seeded subset per (entity, domain).
@@ -489,204 +512,206 @@ def main():
         sys.exit(f"split tolerance exceeded: {worst:.4f}")
 
     created = []
-    r_neg = rng(seed, "negatives")
-    r_shuffle = rng(seed, "row_order")
     r_cluster = rng(seed, "cluster_ids")
     cluster_id = dict(zip(sorted(by_uei), (f"K{n}" for n in r_cluster.sample(range(100000, 1000000), len(by_uei)))))
-    report = {"folders": {}}
+    report = {"tracks": {t: {"folders": {}} for t in TRACKS}}
     defect_counts = collections.Counter()
 
     def has_cv08(r):
         return not r["recipient_address_line_1"] or not r["business_types"]
 
-    for folder in ["dev", "holdout"]:
-        report["folders"][folder] = {}
-        for d in DOMAINS:
-            recs = [r for r in rows if folder_of_uei[r["recipient_uei"]] == folder and domain_of[r["recipient_uei"]] == d]
-            rid = lambda r: new_id[r["record_id"]]  # noqa: E731
-            base = OUT / folder
+    for track, cfg in TRACKS.items():
+        # Each track gets its own record ids and row order, so ids cannot be joined across tracks.
+        r_ids = rng(seed, cfg["stream"]("ids"))
+        new_id = {}
+        for e in ENTITIES:
+            recs_e = sorted(r["record_id"] for r in rows if entity_of[r["record_id"]] == e)
+            nums = r_ids.sample(cfg["id_range"], len(recs_e))  # 6 digits in track A, 7 in track B
+            for rid_, n in zip(recs_e, nums):
+                new_id[rid_] = f"{ID_PREFIX[e]}-{n}"
+        r_neg = rng(seed, "negatives")  # same negatives in both tracks
+        r_shuffle = rng(seed, cfg["stream"]("row_order"))
+        cv07_t = cv07 if cfg["cv07"] else set()
+        visible = ["record_id"] + [f for f in fields if f != "record_id" and f not in cfg["drop"]]
+        for folder in ["dev", "holdout"]:
+            report["tracks"][track]["folders"][folder] = {}
+            for d in DOMAINS:
+                recs = [r for r in rows if folder_of_uei[r["recipient_uei"]] == folder and domain_of[r["recipient_uei"]] == d]
+                rid = lambda r: new_id[r["record_id"]]  # noqa: E731
+                base = OUT / track / folder
 
-            # Inputs: one master per entity, visible fields only, shuffled.
-            visible = ["record_id"] + [f for f in fields if f != "record_id"]
-            for e in ENTITIES:
-                er = [r for r in recs if entity_of[r["record_id"]] == e]
-                out = []
-                for r in er:
-                    v = dict(r, record_id=rid(r))
-                    if r["record_id"] in cv07:
-                        v["recipient_uei"] = ""
-                    out.append([v[f] for f in visible])
-                out.sort(key=lambda x: x[0])
-                r_shuffle.shuffle(out)
-                p = base / "masters" / f"{e}_{d}.csv"
-                write_csv(p, visible, out)
+                # Inputs: one master per entity, visible fields only, shuffled.
+                for e in ENTITIES:
+                    er = [r for r in recs if entity_of[r["record_id"]] == e]
+                    out = []
+                    for r in er:
+                        v = dict(r, record_id=rid(r))
+                        if r["record_id"] in cv07_t:
+                            v["recipient_uei"] = ""
+                        out.append([v[f] for f in visible])
+                    out.sort(key=lambda x: x[0])
+                    r_shuffle.shuffle(out)
+                    p = base / "masters" / f"{e}_{d}.csv"
+                    write_csv(p, visible, out)
+                    created.append(p)
+
+                key = base / "answer_key" / d
+                # Hidden columns.
+                hid = []
+                for r in recs:
+                    defects = []
+                    if r["record_id"] in cv07_t:
+                        defects.append("CV07")
+                    if has_cv08(r):
+                        defects.append("CV08")
+                    hid.append([rid(r), entity_of[r["record_id"]], r["record_id"], true_uei[r["record_id"]], ";".join(defects)])
+                hid.sort()
+                p = key / "records_hidden.csv"
+                write_csv(p, ["record_id", "entity"] + HIDDEN, hid)
                 created.append(p)
 
-            key = base / "answer_key" / d
-            # Hidden columns.
-            hid = []
-            for r in recs:
-                defects = []
-                if r["record_id"] in cv07:
-                    defects.append("CV07")
-                if has_cv08(r):
-                    defects.append("CV08")
-                hid.append([rid(r), entity_of[r["record_id"]], r["record_id"], true_uei[r["record_id"]], ";".join(defects)])
-            hid.sort()
-            p = key / "records_hidden.csv"
-            write_csv(p, ["record_id", "entity"] + HIDDEN, hid)
-            created.append(p)
+                # Clusters and golden records (survivorship).
+                dom_uei = collections.defaultdict(list)
+                for r in recs:
+                    dom_uei[r["recipient_uei"]].append(r)
+                clus_rows, golden_rows = [], []
+                for u, rs in sorted(dom_uei.items()):
+                    ranked = sorted(rs, key=lambda r: (r["last_seen"], int(r["n_awards"] or 0),
+                                                       entity_of[r["record_id"]] == "PlatformCo", r["record_id"]), reverse=True)
+                    gold = ranked[0]
+                    for r in rs:
+                        clus_rows.append([rid(r), cluster_id[u], "true" if r is gold else "false"])
 
-            # Clusters and golden records (survivorship).
-            dom_uei = collections.defaultdict(list)
-            for r in recs:
-                dom_uei[r["recipient_uei"]].append(r)
-            clus_rows, golden_rows = [], []
-            for u, rs in sorted(dom_uei.items()):
-                ranked = sorted(rs, key=lambda r: (r["last_seen"], int(r["n_awards"] or 0),
-                                                   entity_of[r["record_id"]] == "PlatformCo", r["record_id"]), reverse=True)
-                gold = ranked[0]
-                for r in rs:
-                    clus_rows.append([rid(r), cluster_id[u], "true" if r is gold else "false"])
-
-                def latest_nonblank(f):
-                    for r in ranked:
-                        if r[f]:
-                            return r[f], rid(r)
-                    return "", ""
-
-                def most_common(f):
-                    c = collections.Counter(r[f] for r in rs if r[f])
-                    if not c:
+                    def latest_nonblank(f):
+                        for r in ranked:
+                            if r[f]:
+                                return r[f], rid(r)
                         return "", ""
-                    v = sorted(c.items(), key=lambda kv: (-kv[1], kv[0]))[0][0]
-                    return v, ";".join(sorted(rid(r) for r in rs if r[f] == v))
-                g = {"recipient_uei": (u, "answer key (true UEI)")}
-                for f in ["recipient_duns", "cage_code"]:
-                    g[f] = most_common(f)
-                for f in ["recipient_name", "recipient_name_raw", "recipient_address_line_1", "recipient_address_line_2",
-                          "recipient_city_name", "recipient_county_name", "recipient_state_code", "recipient_zip_4_code",
-                          "recipient_country_code"]:
-                    g[f] = (gold[f], rid(gold))
-                for f in ["recipient_doing_business_as_name", "recipient_parent_uei", "recipient_parent_name",
-                          "business_types", "organizational_type"]:
-                    g[f] = latest_nonblank(f)
-                naics = sorted({c for r in rs for c in r["naics_codes"].split(";") if c})
-                g["naics_codes"] = (";".join(naics), "union of all records")
-                golden_rows.append([cluster_id[u], rid(gold)] + [x for f in GOLDEN_FIELDS for x in g[f]])
-            clus_rows.sort()
-            p = key / "entity_clusters.csv"
-            write_csv(p, ["record_id", "cluster_id", "is_golden_record"], clus_rows)
-            created.append(p)
-            p = key / "golden_records.csv"
-            write_csv(p, ["cluster_id", "golden_record_id"] + [x for f in GOLDEN_FIELDS for x in (f, f + "__source")],
-                      sorted(golden_rows))
-            created.append(p)
 
-            # Record pairs.
-            pairs = []  # (a, b, truth, kind)
-            for u, rs in dom_uei.items():
-                for a, b in itertools.combinations(rs, 2):
-                    pairs.append((a, b, "match", "same_uei"))
-            for (u, v), (truth, k) in kind.items():
-                if u in dom_uei and v in dom_uei:
-                    for a in dom_uei[u]:
-                        for b in dom_uei[v]:
-                            pairs.append((a, b, truth, k))
-            n_match = sum(1 for p_ in pairs if p_[2] == "match")
-            linked = set(kind)
-            by_zip = collections.defaultdict(list)
-            for r in recs:
-                by_zip[r["recipient_zip_4_code"][:5]].append(r)
-            cand = []
-            for z in sorted(by_zip):
-                for a, b in itertools.combinations(sorted(by_zip[z], key=lambda r: r["record_id"]), 2):
-                    if a["recipient_uei"] != b["recipient_uei"] and tuple(sorted((a["recipient_uei"], b["recipient_uei"]))) not in linked:
-                        cand.append((a, b))
-            neg = r_neg.sample(cand, min(len(cand), n_match))
-            pairs += [(a, b, "non-match", "zip5_block_negative") for a, b in neg]
+                    def most_common(f):
+                        c = collections.Counter(r[f] for r in rs if r[f])
+                        if not c:
+                            return "", ""
+                        v = sorted(c.items(), key=lambda kv: (-kv[1], kv[0]))[0][0]
+                        return v, ";".join(sorted(rid(r) for r in rs if r[f] == v))
+                    g = {"recipient_uei": (u, "answer key (true UEI)")}
+                    for f in ["recipient_duns", "cage_code"]:
+                        g[f] = most_common(f)
+                    for f in ["recipient_name", "recipient_name_raw", "recipient_address_line_1", "recipient_address_line_2",
+                              "recipient_city_name", "recipient_county_name", "recipient_state_code", "recipient_zip_4_code",
+                              "recipient_country_code"]:
+                        g[f] = (gold[f], rid(gold))
+                    for f in ["recipient_doing_business_as_name", "recipient_parent_uei", "recipient_parent_name",
+                              "business_types", "organizational_type"]:
+                        g[f] = latest_nonblank(f)
+                    naics = sorted({c for r in rs for c in r["naics_codes"].split(";") if c})
+                    g["naics_codes"] = (";".join(naics), "union of all records")
+                    golden_rows.append([cluster_id[u], rid(gold)] + [x for f in GOLDEN_FIELDS for x in g[f]])
+                clus_rows.sort()
+                p = key / "entity_clusters.csv"
+                write_csv(p, ["record_id", "cluster_id", "is_golden_record"], clus_rows)
+                created.append(p)
+                p = key / "golden_records.csv"
+                write_csv(p, ["cluster_id", "golden_record_id"] + [x for f in GOLDEN_FIELDS for x in (f, f + "__source")],
+                          sorted(golden_rows))
+                created.append(p)
 
-            pair_rows, dec_rows = [], []
-            for a, b, truth, k in pairs:
-                x, y = sorted((rid(a), rid(b)))
-                pid = f"{x}|{y}"
-                ra, rb = (a, b) if rid(a) == x else (b, a)
-                pair_rows.append([x, y, truth, k])
-                if k == "same_address":
-                    continue  # not a taxonomy row: no decision label (synthetic/PROPOSED_DEFECTS.md)
-                tags = []
-                if ra["record_id"] in cv07 or rb["record_id"] in cv07:
-                    label, why = "ESCALATE_AMBIGUOUS", "primary identifier missing on at least one record"
-                    tags.append("CV07")
-                elif k in ("same_name", "near_name"):
-                    label, why = "DO_NOT_MERGE_CONFLICTING_IDENTIFIER", f"{k.replace('_', ' ')} but different UEIs; identity not established"
-                elif k in ("parent_child", "sibling"):
-                    label, why = "AUTO_RESOLVE_NON_MATCH", f"reported corporate hierarchy ({k.replace('_', '-')}); distinct UEIs"
-                elif truth == "match":
-                    label, why = "AUTO_RESOLVE_MATCH", "same UEI"
-                else:
-                    label, why = "AUTO_RESOLVE_NON_MATCH", "different UEIs, no name, address or hierarchy link"
-                if k in ("same_name", "near_name"):
-                    tags.append("CV06")
-                if k in ("parent_child", "sibling"):
-                    tags.append("CV09")
-                if truth == "match":
-                    same_ent = entity_of[ra["record_id"]] == entity_of[rb["record_id"]]
-                    raw_diff = ra["recipient_name_raw"] != rb["recipient_name_raw"]
-                    if same_ent and raw_diff:
-                        tags.append("CV01")
-                    if not same_ent:
-                        tags.append("CV02")
-                    if raw_diff and norm_name(ra["recipient_name_raw"]) == norm_name(rb["recipient_name_raw"]):
-                        tags.append("CV03")
-                    if any(r["recipient_doing_business_as_name"] and norm_name(r["recipient_doing_business_as_name"])
-                           != norm_name(r["recipient_name_raw"]) for r in (ra, rb)):
-                        tags.append("CV04")
-                    if norm_addr(ra["recipient_address_line_1"], ra["recipient_zip_4_code"]) != norm_addr(rb["recipient_address_line_1"], rb["recipient_zip_4_code"]):
-                        tags.append("CV05")
-                for t_ in tags:
-                    defect_counts[(folder, d, "pair", t_)] += 1
-                dec_rows.append(["pair", pid, label, ";".join(tags), why])
-            pair_rows.sort()
-            p = key / "record_pairs.csv"
-            write_csv(p, ["record_id_a", "record_id_b", "same_entity", "pair_basis"], pair_rows)
-            created.append(p)
+                # Record pairs.
+                pairs = []  # (a, b, truth, kind)
+                for u, rs in dom_uei.items():
+                    for a, b in itertools.combinations(rs, 2):
+                        pairs.append((a, b, "match", "same_uei"))
+                for (u, v), (truth, k) in kind.items():
+                    if u in dom_uei and v in dom_uei:
+                        for a in dom_uei[u]:
+                            for b in dom_uei[v]:
+                                pairs.append((a, b, truth, k))
+                n_match = sum(1 for p_ in pairs if p_[2] == "match")
+                linked = set(kind)
+                by_zip = collections.defaultdict(list)
+                for r in recs:
+                    by_zip[r["recipient_zip_4_code"][:5]].append(r)
+                cand = []
+                for z in sorted(by_zip):
+                    for a, b in itertools.combinations(sorted(by_zip[z], key=lambda r: r["record_id"]), 2):
+                        if a["recipient_uei"] != b["recipient_uei"] and tuple(sorted((a["recipient_uei"], b["recipient_uei"]))) not in linked:
+                            cand.append((a, b))
+                neg = r_neg.sample(cand, min(len(cand), n_match))
+                pairs += [(a, b, "non-match", "zip5_block_negative") for a, b in neg]
 
-            # Record-level decisions (CV07 injected, CV08 natural).
-            for r in recs:
-                tags = (["CV07"] if r["record_id"] in cv07 else []) + (["CV08"] if has_cv08(r) else [])
-                if tags:
-                    why = "; ".join(({"CV07": "primary identifier (UEI) blank",
-                                      "CV08": "address line 1 or business types blank"})[t_] for t_ in tags)
-                    dec_rows.append(["record", rid(r), "ESCALATE_AMBIGUOUS", ";".join(tags), why])
+                pair_rows, dec_rows = [], []
+                for a, b, truth, k in pairs:
+                    x, y = sorted((rid(a), rid(b)))
+                    pid = f"{x}|{y}"
+                    ra, rb = (a, b) if rid(a) == x else (b, a)
+                    pair_rows.append([x, y, truth, k])
+                    if k == "same_address":
+                        continue  # not a taxonomy row: no decision label (synthetic/PROPOSED_DEFECTS.md)
+                    tags = []
+                    if ra["record_id"] in cv07_t or rb["record_id"] in cv07_t:
+                        tags.append("CV07")
+                    if k in ("same_name", "near_name"):
+                        tags.append("CV06")
+                    if k in ("parent_child", "parent_child_same_name", "sibling"):
+                        tags.append("CV09")
+                    if truth == "match":
+                        same_ent = entity_of[ra["record_id"]] == entity_of[rb["record_id"]]
+                        raw_diff = ra["recipient_name_raw"] != rb["recipient_name_raw"]
+                        if same_ent and raw_diff:
+                            tags.append("CV01")
+                        if not same_ent:
+                            tags.append("CV02")
+                        if raw_diff and norm_name(ra["recipient_name_raw"]) == norm_name(rb["recipient_name_raw"]):
+                            tags.append("CV03")
+                        if any(r["recipient_doing_business_as_name"] and norm_name(r["recipient_doing_business_as_name"])
+                               != norm_name(r["recipient_name_raw"]) for r in (ra, rb)):
+                            tags.append("CV04")
+                        if norm_addr(ra["recipient_address_line_1"], ra["recipient_zip_4_code"]) != norm_addr(rb["recipient_address_line_1"], rb["recipient_zip_4_code"]):
+                            tags.append("CV05")
+                    label, why = pair_label(cfg, truth, k, tags)
                     for t_ in tags:
-                        defect_counts[(folder, d, "record", t_)] += 1
-            # Cluster-level decisions (CV10 natural): conflicting attributes across records of one entity.
-            for u, rs in sorted(dom_uei.items()):
-                if len(rs) < 2:
-                    continue
-                conflicts = []
-                if len({r["business_types"] for r in rs}) > 1:
-                    conflicts.append("business_types")
-                if len({r["recipient_parent_uei"] for r in rs if r["recipient_parent_uei"]}) > 1:
-                    conflicts.append("recipient_parent_uei")
-                if conflicts:
-                    dec_rows.append(["cluster", cluster_id[u], "ESCALATE_POLICY_DECISION", "CV10",
-                                     "conflicting " + " and ".join(conflicts) + " across records of one UEI"])
-                    defect_counts[(folder, d, "cluster", "CV10")] += 1
-            dec_rows.sort()
-            p = key / "decisions.csv"
-            write_csv(p, ["item_type", "item_id", "outcome_label", "defect_ids", "rationale"], dec_rows)
-            created.append(p)
+                        defect_counts[(track, folder, d, "pair", t_)] += 1
+                    dec_rows.append(["pair", pid, label, ";".join(tags), why])
+                pair_rows.sort()
+                p = key / "record_pairs.csv"
+                write_csv(p, ["record_id_a", "record_id_b", "same_entity", "pair_basis"], pair_rows)
+                created.append(p)
 
-            report["folders"][folder][d] = {
-                "records": len(recs), "ueis": len(dom_uei),
-                "records_per_entity": {e: sum(1 for r in recs if entity_of[r["record_id"]] == e) for e in ENTITIES},
-                "pairs": dict(collections.Counter(t for _, _, t, _ in pairs)),
-                "pair_basis": dict(collections.Counter(k for _, _, _, k in pairs)),
-                "labels": dict(collections.Counter(x[2] for x in dec_rows)),
-                "cv07_records": sum(1 for r in recs if r["record_id"] in cv07),
-            }
+                # Record-level decisions (CV07 injected, track A only; CV08 natural).
+                for r in recs:
+                    tags = (["CV07"] if r["record_id"] in cv07_t else []) + (["CV08"] if has_cv08(r) else [])
+                    if tags:
+                        why = "; ".join(({"CV07": "primary identifier (UEI) blank",
+                                          "CV08": "address line 1 or business types blank"})[t_] for t_ in tags)
+                        dec_rows.append(["record", rid(r), "ESCALATE_AMBIGUOUS", ";".join(tags), why])
+                        for t_ in tags:
+                            defect_counts[(track, folder, d, "record", t_)] += 1
+                # Cluster-level decisions (CV10 natural): conflicting visible attributes across records of one entity.
+                for u, rs in sorted(dom_uei.items()):
+                    if len(rs) < 2:
+                        continue
+                    conflicts = []
+                    if len({r["business_types"] for r in rs}) > 1:
+                        conflicts.append("business_types")
+                    if "recipient_parent_uei" in visible and len({r["recipient_parent_uei"] for r in rs if r["recipient_parent_uei"]}) > 1:
+                        conflicts.append("recipient_parent_uei")
+                    if conflicts:
+                        dec_rows.append(["cluster", cluster_id[u], "ESCALATE_POLICY_DECISION", "CV10",
+                                         "conflicting " + " and ".join(conflicts) + " across records of one entity"])
+                        defect_counts[(track, folder, d, "cluster", "CV10")] += 1
+                dec_rows.sort()
+                p = key / "decisions.csv"
+                write_csv(p, ["item_type", "item_id", "outcome_label", "defect_ids", "rationale"], dec_rows)
+                created.append(p)
+
+                report["tracks"][track]["folders"][folder][d] = {
+                    "records": len(recs), "ueis": len(dom_uei),
+                    "records_per_entity": {e: sum(1 for r in recs if entity_of[r["record_id"]] == e) for e in ENTITIES},
+                    "pairs": dict(collections.Counter(t for _, _, t, _ in pairs)),
+                    "pair_basis": dict(collections.Counter(k for _, _, _, k in pairs)),
+                    "labels": dict(collections.Counter(x[2] for x in dec_rows)),
+                    "cv07_records": sum(1 for r in recs if r["record_id"] in cv07_t),
+                }
 
     # ---------------------------------------------------------------------------------------------
     # Charts and CoA answer key.
@@ -695,9 +720,10 @@ def main():
     target_name = {r["gl_code"]: r["account_name"] for r in target_rows}
     removed = {c for cs in COA05_REMOVED.values() for c in cs}
     charts_meta = {"PlatformCo": {"source_chart": f"coa/{CHARTS['PlatformCo']}", "role": "platform target", "cash_basis": False}}
-    p = OUT / "charts" / "PlatformCo_chart.csv"
-    write_bytes_copy(ROOT / "coa" / CHARTS["PlatformCo"], p)
-    created.append(p)
+    for track in TRACKS:
+        p = OUT / track / "charts" / "PlatformCo_chart.csv"
+        write_bytes_copy(ROOT / "coa" / CHARTS["PlatformCo"], p)
+        created.append(p)
     coa_rows_by_entity = {}
     coa05_gaps = {}
     for e in ["AddOnA", "AddOnB", "AddOnC"]:
@@ -772,14 +798,16 @@ def main():
         if e == "AddOnA":
             with_kids = {r["parent_code"] for r in kept_rows if r["parent_code"]}
             kept_rows = [r for r in kept_rows if r["parent_code"] or r["gl_code"] in with_kids]
-        p = OUT / "charts" / f"{e}_chart.csv"
-        write_csv(p, cols, [[r[k] for k in cols] for r in kept_rows])
-        created.append(p)
+        for track in TRACKS:
+            p = OUT / track / "charts" / f"{e}_chart.csv"
+            write_csv(p, cols, [[r[k] for k in cols] for r in kept_rows])
+            created.append(p)
         charts_meta[e] = {"source_chart": f"coa/{CHARTS[e]}", "role": "add-on source",
                           "cash_basis": e == "AddOnA", "rows": len(kept_rows), "ledger_accounts_mapped": len(codes)}
-    p = OUT / "charts" / "charts.json"
-    write_text(p, json.dumps(charts_meta, indent=2) + "\n")
-    created.append(p)
+    for track in TRACKS:
+        p = OUT / track / "charts" / "charts.json"
+        write_text(p, json.dumps(charts_meta, indent=2) + "\n")
+        created.append(p)
 
     # CoA split: rows sharing a target within one entity stay together (union over split targets).
     r_coa = rng(seed, "coa_split")
@@ -810,8 +838,10 @@ def main():
 
     coa_header = ["mapping_id", "entity", "source_code", "source_account_name", "source_present", "target_code",
                   "mapping_type", "rationale", "business_decision_required", "defect_ids", "citation"]
+    review_header = ["mapping_id", "entity", "source_chart", "source_account", "source_name", "target_account",
+                     "target_name", "mapping_type", "rationale"]
     for folder in ["dev", "holdout"]:
-        maps, decs = [], []
+        maps, decs, review = [], [], []
         for e, out in coa_rows_by_entity.items():
             for row in out:
                 if coa_folder[(e, row[0])] != folder:
@@ -819,18 +849,27 @@ def main():
                 mid = f"{e}::{row[0]}"
                 maps.append([mid, e] + row[1:])
                 decs.append(["mapping", mid, row[5], row[8], row[6]])
-                defect_counts[(folder, "coa", "mapping", row[8])] += 1
+                review.append([mid, e, f"coa/{CHARTS[e]}", row[1], row[2], row[4],
+                               ";".join(target_name[t_] for t_ in filter(None, row[4].split(";"))), row[5], row[6]])
         maps.sort()
         decs.sort()
-        p = OUT / folder / "answer_key" / "coa" / "coa_mappings.csv"
-        write_csv(p, coa_header, maps)
+        review.sort()
+        for track in TRACKS:
+            for row in maps:
+                defect_counts[(track, folder, "coa", "mapping", row[9])] += 1
+            p = OUT / track / folder / "answer_key" / "coa" / "coa_mappings.csv"
+            write_csv(p, coa_header, maps)
+            created.append(p)
+            p = OUT / track / folder / "answer_key" / "coa" / "decisions.csv"
+            write_csv(p, ["item_type", "item_id", "outcome_label", "defect_ids", "rationale"], decs)
+            created.append(p)
+            report["tracks"][track]["folders"][folder]["coa"] = {
+                "mappings": len(maps), "per_entity": dict(collections.Counter(x[1] for x in maps)),
+                "labels": dict(collections.Counter(x[6] for x in maps))}
+        # Export for independent review of the mapping key (same rows as the answer key).
+        p = OUT / "review" / f"coa_mappings_{folder}.csv"
+        write_csv(p, review_header, review)
         created.append(p)
-        p = OUT / folder / "answer_key" / "coa" / "decisions.csv"
-        write_csv(p, ["item_type", "item_id", "outcome_label", "defect_ids", "rationale"], decs)
-        created.append(p)
-        report["folders"][folder]["coa"] = {
-            "mappings": len(maps), "per_entity": dict(collections.Counter(x[1] for x in maps)),
-            "labels": dict(collections.Counter(x[6] for x in maps))}
 
     # ---------------------------------------------------------------------------------------------
     removed_log = []
@@ -844,13 +883,14 @@ def main():
     injection_log = {
         "seed": seed,
         "generated": datetime.date.today().isoformat(),
-        "CV07": {"defect": "primary identifier missing (recipient_uei blanked)",
+        "CV07": {"defect": "primary identifier missing (recipient_uei blanked)", "tracks": ["track_a"],
                  "target_rate": CV07_RATE, "allowed_range": [CV07_MIN, CV07_MAX],
                  "blank_primary_uei_before_injection": blank_uei_before,
                  "total_records": len(rows), "total_injected": len(cv07),
                  "overall_rate": round(len(cv07) / len(rows), 4),
                  "per_entity_domain": cv07_rates,
-                 "hidden_column": "defect_ids in answer_key/<domain>/records_hidden.csv; true UEI in true_recipient_uei"},
+                 "hidden_column": "defect_ids in track_a/<split>/answer_key/<domain>/records_hidden.csv; true UEI in true_recipient_uei"},
+        "track_b": {"identifier_columns_removed": IDENTIFIER_COLUMNS, "cv07": "not applicable"},
         "COA05": {"defect": "add-on keeps cash-basis books: accrual accounts absent", "entity": "AddOnA",
                   "chart": f"coa/{CHARTS['AddOnA']}", "cash_basis": True,
                   "ledger_accounts_before": qbo_ledgers, "removed": len(removed),
@@ -865,6 +905,8 @@ def main():
     stats = {"seed": seed, "partition": partition, "split_share": split_share, "coa_split_share": coa_split_share,
              "cv07": cv07_rates, "links": {k: len(v) for k, v in links.items()},
              "uei_pair_kind": dict(collections.Counter(v[1] for v in kind.values())),
+             "tracks": {t: {"name": c["name"], "identifier_columns_removed": c["drop"], "cv07": c["cv07"]}
+                        for t, c in TRACKS.items()},
              "domain_ueis": dict(collections.Counter(domain_of.values())),
              "entity_records": dict(collections.Counter(entity_of.values())),
              "report": report, "defects": {"|".join(k): v for k, v in sorted(defect_counts.items())},
@@ -891,10 +933,17 @@ def main():
 
 
 def generation_report(s, inj):
-    F = s["report"]["folders"]
+    T_ = s["report"]["tracks"]
+    A = T_["track_a"]["folders"]
     L = ["# Generation report", "",
          f"Generated {inj['generated']} by `scripts/generate_synthetic.py`, seed {s['seed']} (`synthetic/SEED.txt`). "
          "Every number below is computed by the script. Holdout figures are counts only.", "",
+         "## Tracks", "",
+         "| track | name | identifier columns in the inputs | CV07 |", "|---|---|---|---|",
+         f"| `track_b` | no-shared-identifier (headline) | none: {', '.join(f'`{c}`' for c in s['tracks']['track_b']['identifier_columns_removed'])} removed | not applicable |",
+         "| `track_a` | shared-identifier | all, `recipient_uei` blanked on CV07 records | 5% per domain per entity |", "",
+         "Both tracks share the seed, partition, dev/holdout split, entity clusters, sampled negatives and chart-of-accounts key. "
+         "Record ids and row order differ between tracks, so ids cannot be joined across them.", "",
          "## Partition (Task 1)", "",
          f"- Attempts until the constraint held: {s['partition']['attempts']}",
          f"- Natural duplicate pairs (same UEI) split across entities: {s['partition']['dup_pairs_split']:,}; "
@@ -902,19 +951,19 @@ def generation_report(s, inj):
          f"- Parent-child record pairs split: {s['partition']['parent_child_record_pairs_split']:,}; "
          f"kept: {s['partition']['parent_child_record_pairs_kept']:,}",
          f"- UEIs per domain: customer {s['domain_ueis']['customer']:,}, vendor {s['domain_ueis']['vendor']:,}", "",
-         "## Records per entity and domain", "",
-         "| entity | domain | records | dev | holdout | dev share | CV07 injected | CV07 rate |",
+         "## Records per entity and domain (both tracks)", "",
+         "| entity | domain | records | dev | holdout | dev share | CV07 injected (track A) | CV07 rate |",
          "|---|---|---:|---:|---:|---:|---:|---:|"]
     for e in ENTITIES:
         for d in DOMAINS:
             c = s["cv07"][f"{e}/{d}"]
-            dv, ho = F["dev"][d]["records_per_entity"][e], F["holdout"][d]["records_per_entity"][e]
+            dv, ho = A["dev"][d]["records_per_entity"][e], A["holdout"][d]["records_per_entity"][e]
             L.append(f"| {e} | {d} | {c['records']:,} | {dv:,} | {ho:,} | {s['split_share'][f'{e}/{d}']:.1%} | "
                      f"{c['injected']} | {c['rate']:.2%} |")
-    L += ["", f"CV07 overall: {inj['CV07']['total_injected']} of {inj['CV07']['total_records']:,} records "
+    L += ["", f"CV07 overall (track A): {inj['CV07']['total_injected']} of {inj['CV07']['total_records']:,} records "
           f"({inj['CV07']['overall_rate']:.2%}); blank primary UEIs before injection: "
           f"{inj['CV07']['blank_primary_uei_before_injection']}.", "",
-          "## Chart of accounts", "",
+          "## Chart of accounts (both tracks)", "",
           f"COA05 (AddOn A, cash basis): {inj['COA05']['removed']} of {inj['COA05']['ledger_accounts_before']} ledger "
           f"accounts removed ({inj['COA05']['rate']:.2%}); list in `synthetic/injection_log.json`. The system never sees "
           f"those accounts, so the answer key scores them as {inj['COA05']['answer_key_items']} items, one per platform "
@@ -922,51 +971,71 @@ def generation_report(s, inj):
           "| folder | AddOn A | AddOn B | AddOn C | DIRECT | MANY_TO_ONE | SPLIT | REQUIRES_POLICY |",
           "|---|---:|---:|---:|---:|---:|---:|---:|"]
     for f in ["dev", "holdout"]:
-        c, lb = F[f]["coa"]["per_entity"], F[f]["coa"]["labels"]
+        c, lb = A[f]["coa"]["per_entity"], A[f]["coa"]["labels"]
         L.append(f"| {f} | {c.get('AddOnA', 0)} | {c.get('AddOnB', 0)} | {c.get('AddOnC', 0)} | {lb.get('MAP_DIRECT', 0)} | "
                  f"{lb.get('MAP_MANY_TO_ONE', 0)} | {lb.get('MAP_SPLIT_REQUIRED', 0)} | "
                  f"{lb.get('MAP_REQUIRES_ACCOUNTING_POLICY', 0)} |")
     L += ["", "Dev share of mapping rows per add-on: "
-          + ", ".join(f"{e} {v:.1%}" for e, v in s["coa_split_share"].items()) + ".", "",
-          "## Answer-key items, escalations and unknown pairs", "",
-          "| folder | domain | records | clusters | match pairs | non-match pairs | unknown pairs | decision items | escalations |",
-          "|---|---|---:|---:|---:|---:|---:|---:|---:|"]
-    for f in ["dev", "holdout"]:
-        for d in DOMAINS:
-            x = F[f][d]
-            esc = sum(v for k, v in x["labels"].items() if k in ESCALATE_LABELS)
-            L.append(f"| {f} | {d} | {x['records']:,} | {x['ueis']:,} | {x['pairs'].get('match', 0):,} | "
-                     f"{x['pairs'].get('non-match', 0):,} | {x['pairs'].get('unknown', 0):,} | "
-                     f"{sum(x['labels'].values()):,} | {esc:,} |")
-        lb = F[f]["coa"]["labels"]
-        L.append(f"| {f} | coa | | | | | | {sum(lb.values())} | {lb.get('MAP_REQUIRES_ACCOUNTING_POLICY', 0)} |")
-    tot_unknown = sum(F[f][d]["pairs"].get("unknown", 0) for f in F for d in DOMAINS)
-    L += ["", f"Unknown pairs in total: {tot_unknown:,} record pairs. They come from "
+          + ", ".join(f"{e} {v:.1%}" for e, v in s["coa_split_share"].items()) + ". "
+          "The mapping key awaits independent review (`synthetic/review/`).", ""]
+    for track in ["track_b", "track_a"]:
+        F = T_[track]["folders"]
+        L += [f"## Answer-key items: {track} ({s['tracks'][track]['name']})", "",
+              "| folder | domain | records | clusters | match pairs | non-match pairs | unknown pairs | decision items | escalations |",
+              "|---|---|---:|---:|---:|---:|---:|---:|---:|"]
+        for f in ["dev", "holdout"]:
+            for d in DOMAINS:
+                x = F[f][d]
+                esc = sum(v for k, v in x["labels"].items() if k in ESCALATE_LABELS)
+                L.append(f"| {f} | {d} | {x['records']:,} | {x['ueis']:,} | {x['pairs'].get('match', 0):,} | "
+                         f"{x['pairs'].get('non-match', 0):,} | {x['pairs'].get('unknown', 0):,} | "
+                         f"{sum(x['labels'].values()):,} | {esc:,} |")
+            lb = F[f]["coa"]["labels"]
+            L.append(f"| {f} | coa | | | | | | {sum(lb.values())} | {lb.get('MAP_REQUIRES_ACCOUNTING_POLICY', 0)} |")
+        L.append("")
+        L += ["| folder | domain | " + " | ".join(sorted(ESCALATE_LABELS | {"AUTO_RESOLVE_MATCH", "AUTO_RESOLVE_NON_MATCH"})) + " |",
+              "|---|---|" + "---:|" * 6]
+        for f in ["dev", "holdout"]:
+            for d in DOMAINS:
+                lb = F[f][d]["labels"]
+                L.append(f"| {f} | {d} | " + " | ".join(f"{lb.get(k, 0):,}" for k in sorted(ESCALATE_LABELS | {"AUTO_RESOLVE_MATCH", "AUTO_RESOLVE_NON_MATCH"})) + " |")
+        L.append("")
+    tot_unknown = sum(A[f][d]["pairs"].get("unknown", 0) for f in A for d in DOMAINS)
+    L += [f"Unknown pairs (same in both tracks): {tot_unknown:,} record pairs. They come from "
           f"{s['uei_pair_kind'].get('same_name', 0)} same-name and {s['uei_pair_kind'].get('near_name', 0)} near-name "
           f"UEI pairs (CV06) and {s['uei_pair_kind'].get('same_address', 0)} same-address UEI pairs (not a taxonomy row; "
           "see `PROPOSED_DEFECTS.md`). Scoring leaves them out of pairwise precision and recall.", "",
           "## Natural versus injected defect counts", "",
           "Pair counts are record pairs. One pair can carry several CV tags.", "",
-          "| defect | origin | dev | holdout |", "|---|---|---:|---:|"]
+          "| defect | origin | track A dev | track A holdout | track B dev | track B holdout |", "|---|---|---:|---:|---:|---:|"]
     agg = collections.defaultdict(collections.Counter)
     for k, v in s["defects"].items():
-        f, d, unit, dfx = k.split("|")
-        agg[(dfx, unit)][f] += v
+        t, f, d, unit, dfx = k.split("|")
+        agg[(dfx, unit)][(t, f)] += v
     for (dfx, unit), c in sorted(agg.items()):
         origin = "injected" if dfx in ("CV07", "COA05") else "natural"
-        L.append(f"| {dfx} ({unit}s) | {origin} | {c['dev']:,} | {c['holdout']:,} |")
+        L.append(f"| {dfx} ({unit}s) | {origin} | {c[('track_a', 'dev')]:,} | {c[('track_a', 'holdout')]:,} | "
+                 f"{c[('track_b', 'dev')]:,} | {c[('track_b', 'holdout')]:,} |")
+    pc, pcn = s["uei_pair_kind"].get("parent_child", 0), s["uei_pair_kind"].get("parent_child_same_name", 0)
     L += ["", "## UEI links used for ground truth", "",
-          f"Distinct UEI pairs: same normalized name {s['links']['same_name']}, near-duplicate name "
-          f"{s['links']['near_name']}, parent-child {s['links']['parent_child']}, siblings {s['links']['siblings']}, "
-          f"same address {s['links']['same_addr']}. When one pair has several links, the order is: name similarity "
-          "(unknown, CV06), then hierarchy (non-match, CV09), then shared address (unknown). After that, "
-          f"{s['uei_pair_kind'].get('parent_child', 0)} of the {s['links']['parent_child']} parent-child pairs stay CV09; "
-          "the rest also share a name and are labelled CV06.", "",
+          f"Distinct UEI pairs: same normalized name {s['links']['same_name']}, near-duplicate name {s['links']['near_name']}, "
+          f"parent-child {s['links']['parent_child']}, siblings {s['links']['siblings']}, same address {s['links']['same_addr']}. "
+          "Precedence when one pair has several links: reported parent-child (non-match, CV09), then name similarity "
+          "(unknown, CV06), then siblings (non-match, CV09), then shared address (unknown).", "",
+          f"All {pc + pcn} parent-child pairs are CV09 non-match: {pc} with different names keep AUTO_RESOLVE_NON_MATCH, "
+          f"and {pcn} that also share a name are ESCALATE_POLICY_DECISION (repo owner, 2026-10-11). Those {pcn} were "
+          "`unknown` (CV06) in the previous run.", "",
           "These counts differ from `entities/profile.md` on purpose. The profile adds up UEI pairs per name or address "
           "group, so one pair can count twice, and it counts near-duplicates as name pairs. Here every UEI pair counts once.", "",
+          "## Track differences in labels", "",
+          "- CV07 exists only in track A. Its records and pairs are ESCALATE_AMBIGUOUS there.",
+          "- CV04 match pairs (trading name differs from legal name): AUTO_RESOLVE_MATCH in track A when both UEIs are visible; "
+          "ESCALATE_AMBIGUOUS in track B, where no identifier is visible (repo owner, 2026-10-11).",
+          "- CV10 in track B uses only visible attributes (business types); parent-UEI conflicts count only in track A.", "",
           "## Taxonomy rows not applied", "",
           "- COA04 (legacy chart bloat): not applicable. The charts carry no usage data (`docs/injection_decisions.md`). On the v2 list.",
           "- COA06 (revenue recognition basis): not applicable. It cannot be seen in a chart of accounts. On the v2 list.",
+          "- CV07: injected in track A only; not applicable to track B.",
           "- All other rows except CV07 and COA05 are natural only, with no injection. COA01, COA02, COA03, COA07, COA08 "
           "and COA09 are tagged on mapping rows; CV01 to CV06 and CV09 on record pairs; CV08 on records; CV10 on clusters.", ""]
     return "\n".join(L)
@@ -991,14 +1060,34 @@ Written by `scripts/generate_synthetic.py`. Nothing here is injected or labelled
 SYNTHETIC_README = """# synthetic/: generated layer
 
 Generated by `scripts/generate_synthetic.py` (seed in `SEED.txt`); every file is hashed in `MANIFEST.json`.
-Scored by `scripts/score.py`.
+Scored by `scripts/score.py --track a|b --split dev|holdout --pred <folder>`.
 
-- `charts/`: input charts for the system under test. `charts.json` tags AddOn A `cash_basis: true` (COA05).
-- `dev/masters/`, `holdout/masters/`: input customer and vendor masters per entity (visible fields only).
+## Tracks
+
+- **`track_b/`, no-shared-identifier: the realistic configuration and the headline result.** Every identifier column
+  (`recipient_uei`, `recipient_parent_uei`, `recipient_duns`, `recipient_parent_duns`, `cage_code`) is removed from the
+  files the system under test reads. Identity must come from names, addresses and attributes. CV07 does not apply.
+- **`track_a/`, shared-identifier: tests escalation behaviour when an identifier exists.** UEIs are visible, and
+  CV07 blanks them on 5% of records per domain per entity.
+
+Both tracks come from the same seed, partition and dev/holdout split. A system scored on track B must not read
+`track_a/`: its inputs carry the identifiers that track B withholds.
+
+## Layout (per track)
+
+- `charts/`: input charts. `charts.json` tags AddOn A `cash_basis: true` (COA05).
+- `dev/masters/`, `holdout/masters/`: input customer and vendor masters per entity.
 - `dev/answer_key/`: dev answer keys (`customer/`, `vendor/`, `coa/`).
 - `holdout/answer_key/`: holdout answer keys. **The person building the tool under test must not open this folder.**
+
+## Shared files
+
+- `review/coa_mappings_dev.csv`, `review/coa_mappings_holdout.csv`: the chart-of-accounts mapping key exported for
+  independent review. **The mapping key awaits independent review**: it was written by the generating model, not by an
+  independent party. The holdout file goes to the reviewer unopened.
 - `injection_log.json`: exact injection rates and the removed AddOn A accounts.
 - `GENERATION_REPORT.md`: counts only.
+- `PROPOSED_DEFECTS.md`: observed conditions proposed as taxonomy rows, not applied.
 """
 
 

@@ -3,6 +3,9 @@
   "generated": "2026-10-11",
   "CV07": {
     "defect": "primary identifier missing (recipient_uei blanked)",
+    "tracks": [
+      "track_a"
+    ],
     "target_rate": 0.05,
     "allowed_range": [
       0.02,
@@ -54,7 +57,17 @@
         "rate": 0.0497
       }
     },
-    "hidden_column": "defect_ids in answer_key/<domain>/records_hidden.csv; true UEI in true_recipient_uei"
+    "hidden_column": "defect_ids in track_a/<split>/answer_key/<domain>/records_hidden.csv; true UEI in true_recipient_uei"
+  },
+  "track_b": {
+    "identifier_columns_removed": [
+      "recipient_uei",
+      "recipient_duns",
+      "cage_code",
+      "recipient_parent_uei",
+      "recipient_parent_duns"
+    ],
+    "cv07": "not applicable"
   },
   "COA05": {
     "defect": "add-on keeps cash-basis books: accrual accounts absent",

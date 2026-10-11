@@ -1,6 +1,10 @@
-"""Score a system's predictions against one answer-key folder (synthetic/dev or synthetic/holdout).
+"""Score a system's predictions against one track and split of the answer key.
 
-Run: python -I scripts/score.py --key synthetic/dev --pred path/to/predictions [--json]
+Run: python -I scripts/score.py --track b --split dev --pred path/to/predictions [--json]
+
+Tracks (synthetic/README.md): b = no-shared-identifier, the realistic configuration and the headline;
+a = shared-identifier, which tests escalation behaviour when an identifier exists. The key folder is
+synthetic/track_<track>/<split>; --key overrides it.
 
 Predictions folder:
   <domain>/clusters.csv   (domain = customer or vendor) columns: record_id, cluster
@@ -85,13 +89,19 @@ def evidence_ok(p, item_type):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--key", required=True)
+    ap.add_argument("--track", choices=["a", "b"], required=True)
+    ap.add_argument("--split", choices=["dev", "holdout"], default="dev")
+    ap.add_argument("--root", default=str(pathlib.Path(__file__).resolve().parent.parent / "synthetic"))
+    ap.add_argument("--key", help="answer-key folder; overrides --root/--track/--split")
     ap.add_argument("--pred", required=True)
     ap.add_argument("--json", action="store_true")
     a = ap.parse_args()
-    key, pred = pathlib.Path(a.key), pathlib.Path(a.pred)
+    key = pathlib.Path(a.key) if a.key else pathlib.Path(a.root) / f"track_{a.track}" / a.split
+    pred = pathlib.Path(a.pred)
+    if not (key / "answer_key").is_dir():
+        ap.error(f"no answer key at {key}")
 
-    out = {"key": str(key), "pairwise": {}}
+    out = {"key": str(key), "track": a.track, "split": a.split, "pairwise": {}}
     pred_clusters, true_clusters = {}, {}
     for d in DOMAINS:
         out["pairwise"][d], pred_clusters[d], true_clusters[d] = pairwise(key, pred, d)
@@ -166,7 +176,7 @@ def main():
     if a.json:
         print(json.dumps(out, indent=2))
         return
-    print(f"Key: {key}")
+    print(f"Track {a.track} ({'no-shared-identifier' if a.track == 'b' else 'shared-identifier'}), key: {key}")
     for d in DOMAINS + ["all"]:
         x = out["pairwise"][d]
         print(f"  pairwise {d:8s}  P {x['precision']:.4f}  R {x['recall']:.4f}  F1 {x['f1']:.4f}  "
