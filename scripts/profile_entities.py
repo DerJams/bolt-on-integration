@@ -99,7 +99,7 @@ def main():
                                {norm_name(r["recipient_parent_name_raw"] or r["recipient_parent_name"]) for r in by_uei[c]})
 
     # Missing fields
-    fields = ["recipient_duns", "cage_code", "recipient_doing_business_as_name", "recipient_parent_uei",
+    fields = ["recipient_uei", "recipient_duns", "cage_code", "recipient_doing_business_as_name", "recipient_parent_uei",
               "recipient_parent_name", "recipient_address_line_1", "recipient_address_line_2",
               "recipient_city_name", "recipient_county_name", "recipient_zip_4_code", "business_types"]
     zip5_only = sum(1 for r in rows if len(r["recipient_zip_4_code"]) == 5)
@@ -175,6 +175,10 @@ def main():
           "| field | blank records | share |", "|---|---:|---:|"]
     L += [f"| {f} | {sum(1 for r in rows if not r[f]):,} | {pct(sum(1 for r in rows if not r[f]), n)} |" for f in fields]
     L += [f"| ZIP is 5-digit only (no +4) | {zip5_only:,} | {pct(zip5_only, n)} |",
+          "",
+          f"Primary identifier: {sum(1 for r in rows if not r['recipient_uei']):,} records have a blank "
+          f"`recipient_uei`. The {sum(1 for r in rows if not r['recipient_parent_uei']):,} blank "
+          "`recipient_parent_uei` values are natural data and are kept as published.",
           "",
           f"UEIs flagged as sole proprietorships: {len(sole):,}. Their recipient names may be personal names "
           "of practitioners, as published by USAspending.",

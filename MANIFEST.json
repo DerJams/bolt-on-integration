@@ -186,8 +186,8 @@
     },
     {
       "path": "entities/profile.md",
-      "bytes": 4542,
-      "sha256": "1af33f5a08d2b9ef004a4f49aa9f915bee9e107a714427146d30a5ae3f349e59",
+      "bytes": 4722,
+      "sha256": "472fd459202eb3969debf33fc35567e3ffbed4ea6e67750b13b44369e5b6fa8d",
       "download_date": "2026-10-11",
       "derived_by": "scripts/profile_entities.py"
     },

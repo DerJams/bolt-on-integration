@@ -8,4 +8,4 @@ Set by the repo owner on 2026-10-11. These apply on top of the fill prompt when 
 4. Citations may be "prompt-specified" for the seed, rates, and split ratio.
 5. Use the system date for the manifest, computed in code.
 6. SHA-256 computed by the script, not by the model.
-7. Do not fill the "must be injected" column in `spec/defect_taxonomy.md`. The repo owner fills it.
+7. The 'must be injected' column is decided by an independent reviewing model with no access to the tool, recorded in docs/injection_decisions.md, and approved by the repo owner. The generating script does not change it.

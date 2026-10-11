@@ -68,6 +68,7 @@ These are not resolved here. Some are the same business re-registered, some are 
 
 | field | blank records | share |
 |---|---:|---:|
+| recipient_uei | 0 | 0.0% |
 | recipient_duns | 2,203 | 25.0% |
 | cage_code | 5,766 | 65.5% |
 | recipient_doing_business_as_name | 8,140 | 92.5% |
@@ -80,6 +81,8 @@ These are not resolved here. Some are the same business re-registered, some are 
 | recipient_zip_4_code | 0 | 0.0% |
 | business_types | 343 | 3.9% |
 | ZIP is 5-digit only (no +4) | 694 | 7.9% |
+
+Primary identifier: 0 records have a blank `recipient_uei`. The 13 blank `recipient_parent_uei` values are natural data and are kept as published.
 
 UEIs flagged as sole proprietorships: 547. Their recipient names may be personal names of practitioners, as published by USAspending.
 

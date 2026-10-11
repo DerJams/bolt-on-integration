@@ -1,0 +1,234 @@
+{
+  "seed": 3391519676,
+  "generated": "2026-10-11",
+  "CV07": {
+    "defect": "primary identifier missing (recipient_uei blanked)",
+    "target_rate": 0.05,
+    "allowed_range": [
+      0.02,
+      0.08
+    ],
+    "blank_primary_uei_before_injection": 0,
+    "total_records": 8800,
+    "total_injected": 438,
+    "overall_rate": 0.0498,
+    "per_entity_domain": {
+      "PlatformCo/customer": {
+        "records": 1810,
+        "injected": 90,
+        "rate": 0.0497
+      },
+      "PlatformCo/vendor": {
+        "records": 1764,
+        "injected": 88,
+        "rate": 0.0499
+      },
+      "AddOnA/customer": {
+        "records": 866,
+        "injected": 43,
+        "rate": 0.0497
+      },
+      "AddOnA/vendor": {
+        "records": 886,
+        "injected": 44,
+        "rate": 0.0497
+      },
+      "AddOnB/customer": {
+        "records": 907,
+        "injected": 45,
+        "rate": 0.0496
+      },
+      "AddOnB/vendor": {
+        "records": 867,
+        "injected": 43,
+        "rate": 0.0496
+      },
+      "AddOnC/customer": {
+        "records": 855,
+        "injected": 43,
+        "rate": 0.0503
+      },
+      "AddOnC/vendor": {
+        "records": 845,
+        "injected": 42,
+        "rate": 0.0497
+      }
+    },
+    "hidden_column": "defect_ids in answer_key/<domain>/records_hidden.csv; true UEI in true_recipient_uei"
+  },
+  "COA05": {
+    "defect": "add-on keeps cash-basis books: accrual accounts absent",
+    "entity": "AddOnA",
+    "chart": "coa/quickbooks_online_types.csv",
+    "cash_basis": true,
+    "ledger_accounts_before": 274,
+    "removed": 16,
+    "rate": 0.0584,
+    "answer_key_items": 7,
+    "removed_accounts": [
+      {
+        "category": "accounts receivable",
+        "source_code": "Accounts Receivable|Accounts Receivable",
+        "would_have_targeted": "us-gaap:ReceivablesNetCurrent",
+        "answer_key_items": [
+          "AddOnA::cash_basis::us-gaap:ReceivablesNetCurrent"
+        ],
+        "label": "MAP_REQUIRES_ACCOUNTING_POLICY",
+        "rationale": "source is cash-basis; accrual conversion required"
+      },
+      {
+        "category": "accounts receivable",
+        "source_code": "Other Current Asset|TradeAndOtherReceivables",
+        "would_have_targeted": "us-gaap:ReceivablesNetCurrent",
+        "answer_key_items": [
+          "AddOnA::cash_basis::us-gaap:ReceivablesNetCurrent"
+        ],
+        "label": "MAP_REQUIRES_ACCOUNTING_POLICY",
+        "rationale": "source is cash-basis; accrual conversion required"
+      },
+      {
+        "category": "accounts receivable",
+        "source_code": "Other Current Asset|AllowanceForBadDebts",
+        "would_have_targeted": "us-gaap:ReceivablesNetCurrent",
+        "answer_key_items": [
+          "AddOnA::cash_basis::us-gaap:ReceivablesNetCurrent"
+        ],
+        "label": "MAP_REQUIRES_ACCOUNTING_POLICY",
+        "rationale": "source is cash-basis; accrual conversion required"
+      },
+      {
+        "category": "accounts receivable",
+        "source_code": "Other Current Asset|Retainage",
+        "would_have_targeted": "us-gaap:ReceivablesNetCurrent",
+        "answer_key_items": [
+          "AddOnA::cash_basis::us-gaap:ReceivablesNetCurrent"
+        ],
+        "label": "MAP_REQUIRES_ACCOUNTING_POLICY",
+        "rationale": "source is cash-basis; accrual conversion required"
+      },
+      {
+        "category": "accounts payable",
+        "source_code": "Accounts Payable|Accounts Payable",
+        "would_have_targeted": "us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent",
+        "answer_key_items": [
+          "AddOnA::cash_basis::us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent"
+        ],
+        "label": "MAP_REQUIRES_ACCOUNTING_POLICY",
+        "rationale": "source is cash-basis; accrual conversion required"
+      },
+      {
+        "category": "accounts payable",
+        "source_code": "Accounts Payable|OutstandingDuesMicroSmallEnterprise",
+        "would_have_targeted": "us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent",
+        "answer_key_items": [
+          "AddOnA::cash_basis::us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent"
+        ],
+        "label": "MAP_REQUIRES_ACCOUNTING_POLICY",
+        "rationale": "source is cash-basis; accrual conversion required"
+      },
+      {
+        "category": "accounts payable",
+        "source_code": "Accounts Payable|OutstandingDuesOtherThanMicroSmallEnterprise",
+        "would_have_targeted": "us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent",
+        "answer_key_items": [
+          "AddOnA::cash_basis::us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent"
+        ],
+        "label": "MAP_REQUIRES_ACCOUNTING_POLICY",
+        "rationale": "source is cash-basis; accrual conversion required"
+      },
+      {
+        "category": "accounts payable",
+        "source_code": "Other Current Liability|TradeAndOtherPayables",
+        "would_have_targeted": "us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent",
+        "answer_key_items": [
+          "AddOnA::cash_basis::us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent"
+        ],
+        "label": "MAP_REQUIRES_ACCOUNTING_POLICY",
+        "rationale": "source is cash-basis; accrual conversion required"
+      },
+      {
+        "category": "accrued liabilities",
+        "source_code": "Other Current Liability|AccruedLiabilities",
+        "would_have_targeted": "us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent",
+        "answer_key_items": [
+          "AddOnA::cash_basis::us-gaap:AccountsPayableAndAccruedLiabilitiesCurrent"
+        ],
+        "label": "MAP_REQUIRES_ACCOUNTING_POLICY",
+        "rationale": "source is cash-basis; accrual conversion required"
+      },
+      {
+        "category": "accrued liabilities",
+        "source_code": "Long Term Liability|AccruedLongLermLiabilities",
+        "would_have_targeted": "us-gaap:AccountsPayableAndAccruedLiabilitiesNoncurrent",
+        "answer_key_items": [
+          "AddOnA::cash_basis::us-gaap:AccountsPayableAndAccruedLiabilitiesNoncurrent"
+        ],
+        "label": "MAP_REQUIRES_ACCOUNTING_POLICY",
+        "rationale": "source is cash-basis; accrual conversion required"
+      },
+      {
+        "category": "accrued liabilities",
+        "source_code": "Long Term Liability|AccruedVacationPayable",
+        "would_have_targeted": "us-gaap:AccountsPayableAndAccruedLiabilitiesNoncurrent",
+        "answer_key_items": [
+          "AddOnA::cash_basis::us-gaap:AccountsPayableAndAccruedLiabilitiesNoncurrent"
+        ],
+        "label": "MAP_REQUIRES_ACCOUNTING_POLICY",
+        "rationale": "source is cash-basis; accrual conversion required"
+      },
+      {
+        "category": "prepaid expenses",
+        "source_code": "Other Current Asset|PrepaidExpenses",
+        "would_have_targeted": "us-gaap:PrepaidExpenseCurrent",
+        "answer_key_items": [
+          "AddOnA::cash_basis::us-gaap:PrepaidExpenseCurrent"
+        ],
+        "label": "MAP_REQUIRES_ACCOUNTING_POLICY",
+        "rationale": "source is cash-basis; accrual conversion required"
+      },
+      {
+        "category": "prepaid expenses",
+        "source_code": "Other Asset|PrepaymentsAndAccruedIncome",
+        "would_have_targeted": "us-gaap:PrepaidExpenseCurrent;us-gaap:ReceivablesNetCurrent",
+        "answer_key_items": [
+          "AddOnA::cash_basis::us-gaap:PrepaidExpenseCurrent",
+          "AddOnA::cash_basis::us-gaap:ReceivablesNetCurrent"
+        ],
+        "label": "MAP_REQUIRES_ACCOUNTING_POLICY",
+        "rationale": "source is cash-basis; accrual conversion required"
+      },
+      {
+        "category": "deferred revenue",
+        "source_code": "Long Term Liability|AccrualsAndDeferredIncome",
+        "would_have_targeted": "us-gaap:AccountsPayableAndAccruedLiabilitiesNoncurrent;us-gaap:DeferredRevenueNoncurrent",
+        "answer_key_items": [
+          "AddOnA::cash_basis::us-gaap:AccountsPayableAndAccruedLiabilitiesNoncurrent",
+          "AddOnA::cash_basis::us-gaap:DeferredRevenueNoncurrent"
+        ],
+        "label": "MAP_REQUIRES_ACCOUNTING_POLICY",
+        "rationale": "source is cash-basis; accrual conversion required"
+      },
+      {
+        "category": "accumulated depreciation",
+        "source_code": "Fixed Asset|AccumulatedDepreciation",
+        "would_have_targeted": "us-gaap:PropertyPlantAndEquipmentNet",
+        "answer_key_items": [
+          "AddOnA::cash_basis::us-gaap:PropertyPlantAndEquipmentNet"
+        ],
+        "label": "MAP_REQUIRES_ACCOUNTING_POLICY",
+        "rationale": "source is cash-basis; accrual conversion required"
+      },
+      {
+        "category": "accumulated depreciation",
+        "source_code": "Fixed Asset|CumulativeDepreciationOnIntangibleAssets",
+        "would_have_targeted": "us-gaap:IntangibleAssetsNetExcludingGoodwill",
+        "answer_key_items": [
+          "AddOnA::cash_basis::us-gaap:IntangibleAssetsNetExcludingGoodwill"
+        ],
+        "label": "MAP_REQUIRES_ACCOUNTING_POLICY",
+        "rationale": "source is cash-basis; accrual conversion required"
+      }
+    ],
+    "citation": "evidence/consero_rollup_checklist.md"
+  }
+}

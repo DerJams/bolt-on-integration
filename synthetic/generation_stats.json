@@ -1,0 +1,316 @@
+{
+  "seed": 3391519676,
+  "partition": {
+    "attempts": 1,
+    "dup_pairs_split": 13332,
+    "dup_pairs_kept": 5235,
+    "parent_child_record_pairs_split": 527,
+    "parent_child_record_pairs_kept": 211
+  },
+  "split_share": {
+    "PlatformCo/customer": 0.6022,
+    "PlatformCo/vendor": 0.6054,
+    "AddOnA/customer": 0.6005,
+    "AddOnA/vendor": 0.6005,
+    "AddOnB/customer": 0.6097,
+    "AddOnB/vendor": 0.6067,
+    "AddOnC/customer": 0.6047,
+    "AddOnC/vendor": 0.6107
+  },
+  "coa_split_share": {
+    "AddOnA": 0.6,
+    "AddOnB": 0.6,
+    "AddOnC": 0.5926
+  },
+  "cv07": {
+    "PlatformCo/customer": {
+      "records": 1810,
+      "injected": 90,
+      "rate": 0.0497
+    },
+    "PlatformCo/vendor": {
+      "records": 1764,
+      "injected": 88,
+      "rate": 0.0499
+    },
+    "AddOnA/customer": {
+      "records": 866,
+      "injected": 43,
+      "rate": 0.0497
+    },
+    "AddOnA/vendor": {
+      "records": 886,
+      "injected": 44,
+      "rate": 0.0497
+    },
+    "AddOnB/customer": {
+      "records": 907,
+      "injected": 45,
+      "rate": 0.0496
+    },
+    "AddOnB/vendor": {
+      "records": 867,
+      "injected": 43,
+      "rate": 0.0496
+    },
+    "AddOnC/customer": {
+      "records": 855,
+      "injected": 43,
+      "rate": 0.0503
+    },
+    "AddOnC/vendor": {
+      "records": 845,
+      "injected": 42,
+      "rate": 0.0497
+    }
+  },
+  "links": {
+    "same_name": 149,
+    "near_name": 47,
+    "parent_child": 54,
+    "siblings": 307,
+    "same_addr": 129
+  },
+  "uei_pair_kind": {
+    "same_address": 100,
+    "near_name": 47,
+    "same_name": 149,
+    "sibling": 232,
+    "parent_child": 24
+  },
+  "domain_ueis": {
+    "vendor": 1998,
+    "customer": 2037
+  },
+  "entity_records": {
+    "PlatformCo": 3574,
+    "AddOnA": 1752,
+    "AddOnB": 1774,
+    "AddOnC": 1700
+  },
+  "report": {
+    "folders": {
+      "dev": {
+        "customer": {
+          "records": 2680,
+          "ueis": 1212,
+          "records_per_entity": {
+            "PlatformCo": 1090,
+            "AddOnA": 520,
+            "AddOnB": 553,
+            "AddOnC": 517
+          },
+          "pairs": {
+            "match": 5398,
+            "unknown": 652,
+            "non-match": 5649
+          },
+          "pair_basis": {
+            "same_uei": 5398,
+            "same_address": 395,
+            "near_name": 113,
+            "parent_child": 173,
+            "sibling": 78,
+            "same_name": 144,
+            "zip5_block_negative": 5398
+          },
+          "labels": {
+            "ESCALATE_POLICY_DECISION": 369,
+            "AUTO_RESOLVE_NON_MATCH": 5033,
+            "AUTO_RESOLVE_MATCH": 4874,
+            "DO_NOT_MERGE_CONFLICTING_IDENTIFIER": 226,
+            "ESCALATE_AMBIGUOUS": 1424
+          },
+          "cv07_records": 137
+        },
+        "vendor": {
+          "records": 2642,
+          "ueis": 1254,
+          "records_per_entity": {
+            "PlatformCo": 1068,
+            "AddOnA": 532,
+            "AddOnB": 526,
+            "AddOnC": 516
+          },
+          "pairs": {
+            "match": 5527,
+            "unknown": 630,
+            "non-match": 5775
+          },
+          "pair_basis": {
+            "same_uei": 5527,
+            "same_address": 261,
+            "same_name": 192,
+            "sibling": 120,
+            "parent_child": 151,
+            "near_name": 177,
+            "zip5_block_negative": 5504
+          },
+          "labels": {
+            "ESCALATE_POLICY_DECISION": 376,
+            "AUTO_RESOLVE_NON_MATCH": 5332,
+            "AUTO_RESOLVE_MATCH": 5074,
+            "ESCALATE_AMBIGUOUS": 1135,
+            "DO_NOT_MERGE_CONFLICTING_IDENTIFIER": 351
+          },
+          "cv07_records": 126
+        },
+        "coa": {
+          "mappings": 299,
+          "per_entity": {
+            "AddOnA": 159,
+            "AddOnB": 108,
+            "AddOnC": 32
+          },
+          "labels": {
+            "MAP_MANY_TO_ONE": 149,
+            "MAP_REQUIRES_ACCOUNTING_POLICY": 106,
+            "MAP_DIRECT": 30,
+            "MAP_SPLIT_REQUIRED": 14
+          }
+        }
+      },
+      "holdout": {
+        "customer": {
+          "records": 1758,
+          "ueis": 825,
+          "records_per_entity": {
+            "PlatformCo": 720,
+            "AddOnA": 346,
+            "AddOnB": 354,
+            "AddOnC": 338
+          },
+          "pairs": {
+            "match": 2859,
+            "unknown": 562,
+            "non-match": 2813
+          },
+          "pair_basis": {
+            "same_uei": 2859,
+            "same_address": 313,
+            "same_name": 214,
+            "parent_child": 26,
+            "sibling": 16,
+            "near_name": 35,
+            "zip5_block_negative": 2771
+          },
+          "labels": {
+            "ESCALATE_POLICY_DECISION": 258,
+            "AUTO_RESOLVE_MATCH": 2634,
+            "AUTO_RESOLVE_NON_MATCH": 2580,
+            "ESCALATE_AMBIGUOUS": 618,
+            "DO_NOT_MERGE_CONFLICTING_IDENTIFIER": 241
+          },
+          "cv07_records": 84
+        },
+        "vendor": {
+          "records": 1720,
+          "ueis": 744,
+          "records_per_entity": {
+            "PlatformCo": 696,
+            "AddOnA": 354,
+            "AddOnB": 341,
+            "AddOnC": 329
+          },
+          "pairs": {
+            "match": 4783,
+            "unknown": 1283,
+            "non-match": 4472
+          },
+          "pair_basis": {
+            "same_uei": 4783,
+            "same_address": 191,
+            "same_name": 1033,
+            "sibling": 1944,
+            "near_name": 59,
+            "parent_child": 25,
+            "zip5_block_negative": 2503
+          },
+          "labels": {
+            "ESCALATE_POLICY_DECISION": 239,
+            "AUTO_RESOLVE_MATCH": 4336,
+            "ESCALATE_AMBIGUOUS": 1283,
+            "AUTO_RESOLVE_NON_MATCH": 3917,
+            "DO_NOT_MERGE_CONFLICTING_IDENTIFIER": 953
+          },
+          "cv07_records": 91
+        },
+        "coa": {
+          "mappings": 200,
+          "per_entity": {
+            "AddOnA": 106,
+            "AddOnB": 72,
+            "AddOnC": 22
+          },
+          "labels": {
+            "MAP_REQUIRES_ACCOUNTING_POLICY": 65,
+            "MAP_MANY_TO_ONE": 115,
+            "MAP_DIRECT": 16,
+            "MAP_SPLIT_REQUIRED": 4
+          }
+        }
+      }
+    }
+  },
+  "defects": {
+    "dev|coa|mapping|COA01": 30,
+    "dev|coa|mapping|COA02": 149,
+    "dev|coa|mapping|COA03": 14,
+    "dev|coa|mapping|COA05": 5,
+    "dev|coa|mapping|COA07": 5,
+    "dev|coa|mapping|COA08": 39,
+    "dev|coa|mapping|COA09": 57,
+    "dev|customer|cluster|CV10": 369,
+    "dev|customer|pair|CV01": 469,
+    "dev|customer|pair|CV02": 3863,
+    "dev|customer|pair|CV03": 1010,
+    "dev|customer|pair|CV04": 886,
+    "dev|customer|pair|CV05": 2119,
+    "dev|customer|pair|CV06": 257,
+    "dev|customer|pair|CV07": 1171,
+    "dev|customer|pair|CV09": 251,
+    "dev|customer|record|CV07": 137,
+    "dev|customer|record|CV08": 120,
+    "dev|vendor|cluster|CV10": 376,
+    "dev|vendor|pair|CV01": 608,
+    "dev|vendor|pair|CV02": 3965,
+    "dev|vendor|pair|CV03": 1431,
+    "dev|vendor|pair|CV04": 857,
+    "dev|vendor|pair|CV05": 2447,
+    "dev|vendor|pair|CV06": 369,
+    "dev|vendor|pair|CV07": 914,
+    "dev|vendor|pair|CV09": 271,
+    "dev|vendor|record|CV07": 126,
+    "dev|vendor|record|CV08": 97,
+    "holdout|coa|mapping|COA01": 16,
+    "holdout|coa|mapping|COA02": 115,
+    "holdout|coa|mapping|COA03": 4,
+    "holdout|coa|mapping|COA05": 2,
+    "holdout|coa|mapping|COA07": 9,
+    "holdout|coa|mapping|COA08": 26,
+    "holdout|coa|mapping|COA09": 28,
+    "holdout|customer|cluster|CV10": 258,
+    "holdout|customer|pair|CV01": 176,
+    "holdout|customer|pair|CV02": 2063,
+    "holdout|customer|pair|CV03": 373,
+    "holdout|customer|pair|CV04": 255,
+    "holdout|customer|pair|CV05": 1065,
+    "holdout|customer|pair|CV06": 249,
+    "holdout|customer|pair|CV07": 466,
+    "holdout|customer|pair|CV09": 42,
+    "holdout|customer|record|CV07": 84,
+    "holdout|customer|record|CV08": 72,
+    "holdout|vendor|cluster|CV10": 239,
+    "holdout|vendor|pair|CV01": 530,
+    "holdout|vendor|pair|CV02": 3441,
+    "holdout|vendor|pair|CV03": 1394,
+    "holdout|vendor|pair|CV04": 949,
+    "holdout|vendor|pair|CV05": 1785,
+    "holdout|vendor|pair|CV06": 1092,
+    "holdout|vendor|pair|CV07": 1141,
+    "holdout|vendor|pair|CV09": 1969,
+    "holdout|vendor|record|CV07": 91,
+    "holdout|vendor|record|CV08": 54
+  },
+  "coa05_removed": 16
+}
