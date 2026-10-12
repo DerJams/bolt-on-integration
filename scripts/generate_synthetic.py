@@ -720,8 +720,10 @@ def main():
     target_name = {r["gl_code"]: r["account_name"] for r in target_rows}
     removed = {c for cs in COA05_REMOVED.values() for c in cs}
     charts_meta = {"PlatformCo": {"source_chart": f"coa/{CHARTS['PlatformCo']}", "role": "platform target", "cash_basis": False}}
-    for track in TRACKS:
-        p = OUT / track / "charts" / "PlatformCo_chart.csv"
+    # Charts as the benchmark presents them: per track, and in synthetic/review/inputs/ for the independent reviewer.
+    chart_dirs = [OUT / t / "charts" for t in TRACKS] + [OUT / "review" / "inputs"]
+    for cdir in chart_dirs:
+        p = cdir / "PlatformCo_chart.csv"
         write_bytes_copy(ROOT / "coa" / CHARTS["PlatformCo"], p)
         created.append(p)
     coa_rows_by_entity = {}
@@ -798,14 +800,14 @@ def main():
         if e == "AddOnA":
             with_kids = {r["parent_code"] for r in kept_rows if r["parent_code"]}
             kept_rows = [r for r in kept_rows if r["parent_code"] or r["gl_code"] in with_kids]
-        for track in TRACKS:
-            p = OUT / track / "charts" / f"{e}_chart.csv"
+        for cdir in chart_dirs:
+            p = cdir / f"{e}_chart.csv"
             write_csv(p, cols, [[r[k] for k in cols] for r in kept_rows])
             created.append(p)
         charts_meta[e] = {"source_chart": f"coa/{CHARTS[e]}", "role": "add-on source",
                           "cash_basis": e == "AddOnA", "rows": len(kept_rows), "ledger_accounts_mapped": len(codes)}
-    for track in TRACKS:
-        p = OUT / track / "charts" / "charts.json"
+    for cdir in chart_dirs:
+        p = cdir / "charts.json"
         write_text(p, json.dumps(charts_meta, indent=2) + "\n")
         created.append(p)
 
@@ -916,10 +918,13 @@ def main():
     created.append(p)
     created.append(OUT / "SEED.txt")
     for name, text in [("GENERATION_REPORT.md", generation_report(stats, injection_log)),
-                       ("PROPOSED_DEFECTS.md", PROPOSED_DEFECTS), ("README.md", SYNTHETIC_README)]:
+                       ("PROPOSED_DEFECTS.md", PROPOSED_DEFECTS), ("README.md", SYNTHETIC_README),
+                       ("review/inputs/labels.md", REVIEW_LABELS), ("review/inputs/survivorship_fields.md", REVIEW_FIELDS)]:
         write_text(OUT / name, text)
         created.append(OUT / name)
 
+    # Also list files written outside this run (synthetic/review/compare_keys.py and anything it adopted).
+    created += [f for f in OUT.rglob("*") if f.is_file() and f.name != "MANIFEST.json"]
     files = []
     for f in sorted(set(created), key=lambda x: x.relative_to(ROOT).as_posix()):
         b = f.read_bytes()
@@ -1057,6 +1062,71 @@ Written by `scripts/generate_synthetic.py`. Nothing here is injected or labelled
   and a decision by the repo owner.
 """
 
+REVIEW_LABELS = """# Chart-of-accounts outcome labels
+
+Inputs for an independent mapping of each add-on chart onto the platform target chart. The charts in this folder
+are exactly as the benchmark presents them: `PlatformCo_chart.csv` is the platform target, and `AddOnA_chart.csv`,
+`AddOnB_chart.csv`, `AddOnC_chart.csv` are the three add-on source charts. `charts.json` tags AddOn A
+`cash_basis: true`: it keeps cash-basis books, and its accrual accounts are absent from its chart.
+
+## Labels (exactly one per mapping row)
+
+- `MAP_DIRECT`: the source account is the same concept as one target account, and no other account of the same add-on chart maps to that target.
+- `MAP_MANY_TO_ONE`: the source account maps to one target account that two or more accounts of the same add-on chart also roll into.
+- `MAP_SPLIT_REQUIRED`: the source account's balance must be divided across two or more target accounts.
+- `MAP_REQUIRES_ACCOUNTING_POLICY`: no target can be settled without an accounting-policy or business decision, so the mapping is escalated rather than guessed.
+- `EXCLUDE_OR_RETIRED_ACCOUNT`: the source account is unused or obsolete and should be retired rather than mapped.
+
+## Rows to produce
+
+Columns: `addon, source_code, target_code, mapping_type, business_decision_required, rationale`.
+
+- `addon`: `AddOnA`, `AddOnB` or `AddOnC`.
+- One row per postable source account: in `AddOnA_chart.csv` every row with a `parent_code` (QuickBooks detail types;
+  rows without one are account-type categories); in `AddOnB_chart.csv` every four-digit code that is no other row's
+  `parent_code`; in `AddOnC_chart.csv` every row whose `description` starts with `ledger account`.
+- AddOn A is cash basis. For each platform target account that it can no longer populate on an accrual basis,
+  add one row with `source_code` `cash_basis::<target_code>` and `target_code` that target account.
+- `target_code`: a `gl_code` from `PlatformCo_chart.csv`; several codes joined with `;` for `MAP_SPLIT_REQUIRED`;
+  may be empty for `MAP_REQUIRES_ACCOUNTING_POLICY` and `EXCLUDE_OR_RETIRED_ACCOUNT`.
+- `business_decision_required`: `true` or `false`.
+"""
+
+REVIEW_FIELDS = """# Record fields available for choosing a golden record
+
+Each customer or vendor master row carries the fields below (`schemas/entity_master.md`). Identity clusters span
+the four entities' masters. In track B (no-shared-identifier) the five identifier fields are withheld from the
+system under test; they are listed here because the answer key's golden record carries them.
+
+| field | content | in track B inputs |
+|---|---|---|
+| `record_id` | benchmark record id; the prefix names the entity master (PLT, AOA, AOB, AOC) | yes |
+| `recipient_uei` | Unique Entity Identifier (12 characters) | no |
+| `recipient_duns` | legacy DUNS number; blank on records after 2022 | no |
+| `cage_code` | CAGE code | no |
+| `recipient_name` | legal name, USAspending-normalized | yes |
+| `recipient_name_raw` | legal name as submitted | yes |
+| `recipient_doing_business_as_name` | trading (DBA) name | yes |
+| `recipient_parent_uei` | parent entity UEI | no |
+| `recipient_parent_duns` | parent entity DUNS | no |
+| `recipient_parent_name` | parent entity name, normalized | yes |
+| `recipient_parent_name_raw` | parent entity name as submitted | yes |
+| `recipient_address_line_1` | street address | yes |
+| `recipient_address_line_2` | address line 2 | yes |
+| `recipient_city_name` | city | yes |
+| `recipient_county_name` | county | yes |
+| `recipient_state_code` | state | yes |
+| `recipient_zip_4_code` | ZIP or ZIP+4 | yes |
+| `recipient_country_code` | country | yes |
+| `business_types` | `;`-joined business-type flags | yes |
+| `organizational_type` | organizational type | yes |
+| `naics_codes` | `;`-joined NAICS codes over the entity's awards | yes |
+| `n_awards` | number of awards behind the record | yes |
+| `first_seen` | earliest award date behind the record | yes |
+| `last_seen` | latest award date behind the record | yes |
+"""
+
+
 SYNTHETIC_README = """# synthetic/: generated layer
 
 Generated by `scripts/generate_synthetic.py` (seed in `SEED.txt`); every file is hashed in `MANIFEST.json`.
@@ -1085,6 +1155,11 @@ Both tracks come from the same seed, partition and dev/holdout split. A system s
 - `review/coa_mappings_dev.csv`, `review/coa_mappings_holdout.csv`: the chart-of-accounts mapping key exported for
   independent review. **The mapping key awaits independent review**: it was written by the generating model, not by an
   independent party. The holdout file goes to the reviewer unopened.
+- `review/inputs/`: what an independent reviewer gets to build a mapping key from scratch: the four charts as the
+  benchmark presents them, `labels.md` and `survivorship_fields.md`. No mapping or rationale.
+- `review/compare_keys.py`: adopts an independent mapping CSV as the answer key, reports the per-row disagreement rate
+  against the current key, and archives the current key as `coa_mappings_claude.csv`. Re-running the generator
+  restores the generated key; run `compare_keys.py` again afterwards.
 - `injection_log.json`: exact injection rates and the removed AddOn A accounts.
 - `GENERATION_REPORT.md`: counts only.
 - `PROPOSED_DEFECTS.md`: observed conditions proposed as taxonomy rows, not applied.

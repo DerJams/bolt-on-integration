@@ -1,14 +1,14 @@
 {
-  "generated": "2026-10-11",
+  "generated": "2026-10-12",
   "generator": "scripts/generate_synthetic.py",
   "seed": 3391519676,
   "partition_attempts": 1,
-  "file_count": 98,
+  "file_count": 106,
   "files": [
     {
       "path": "synthetic/GENERATION_REPORT.md",
       "bytes": 7874,
-      "sha256": "c9ed506bb231b7ca5646a8ddb723966432c4f5e2cd7f603c9906cb5805d31b1f"
+      "sha256": "712c74b7a73ac6b31d72671f9bb2cd486d214496f434401e6e2ced81d80978a5"
     },
     {
       "path": "synthetic/PROPOSED_DEFECTS.md",
@@ -17,8 +17,8 @@
     },
     {
       "path": "synthetic/README.md",
-      "bytes": 1837,
-      "sha256": "a8051b41988eb0d66f1fc04fa12df82d712052c64de772d70e750c9180a06a77"
+      "bytes": 2345,
+      "sha256": "a452ff6a50a9e871bdd2bb369facc591af00921030c6b54add0f47c8829f46c9"
     },
     {
       "path": "synthetic/SEED.txt",
@@ -33,7 +33,7 @@
     {
       "path": "synthetic/injection_log.json",
       "bytes": 9314,
-      "sha256": "66c9e8d1864ce65c43db0631c7d5e14e3c1f1026dbfa0946c087c4d107e6b538"
+      "sha256": "6a9698dda092b2414669753e57ff92e94cc73c2aa3e1a936e940b3c0cb65ddfb"
     },
     {
       "path": "synthetic/review/coa_mappings_dev.csv",
@@ -44,6 +44,46 @@
       "path": "synthetic/review/coa_mappings_holdout.csv",
       "bytes": 51242,
       "sha256": "04c4fab46aa5b8003454d83ca761f5ad5094bf8fdd8bc84545c443c7f1028a7b"
+    },
+    {
+      "path": "synthetic/review/compare_keys.py",
+      "bytes": 11140,
+      "sha256": "5677a15ef21286b0a85217170b54a62bd2ef9206dbe1538bd93ce4f18f07cd59"
+    },
+    {
+      "path": "synthetic/review/inputs/AddOnA_chart.csv",
+      "bytes": 31161,
+      "sha256": "ea5bcc3e3a87d18300a0e23c3109b5abbc06aa067ef4673ef8142cf3d3120a75"
+    },
+    {
+      "path": "synthetic/review/inputs/AddOnB_chart.csv",
+      "bytes": 59917,
+      "sha256": "9331ede398edd77fd830e0385cbc550ea1b6a08f1be4d8c51969b51a2ed960a5"
+    },
+    {
+      "path": "synthetic/review/inputs/AddOnC_chart.csv",
+      "bytes": 5888,
+      "sha256": "cfb1e5e0a08e39915cec056c09428ce00ea8a2fcfd5c939ef7fa3c44e58bf290"
+    },
+    {
+      "path": "synthetic/review/inputs/PlatformCo_chart.csv",
+      "bytes": 111445,
+      "sha256": "36076107739c01a040b6ebde2e07fdbb4d61d986fe1f4109f01f16c353453a03"
+    },
+    {
+      "path": "synthetic/review/inputs/charts.json",
+      "bytes": 663,
+      "sha256": "3d42863c8be91dca2dd538949f1aaebeabab90c527df8ea14c5c935a50e37480"
+    },
+    {
+      "path": "synthetic/review/inputs/labels.md",
+      "bytes": 2123,
+      "sha256": "fc0157e81666b4b6abc35c6268e04013dc80de229d4990c73f3046900f9f6b30"
+    },
+    {
+      "path": "synthetic/review/inputs/survivorship_fields.md",
+      "bytes": 1831,
+      "sha256": "939c7b3d7c8ed4520e7308abc49ba18a4f77fa6e4283ea8ee0fddca303efdf92"
     },
     {
       "path": "synthetic/track_a/charts/AddOnA_chart.csv",

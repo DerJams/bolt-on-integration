@@ -1,0 +1,28 @@
+{
+  "PlatformCo": {
+    "source_chart": "coa/us_gaap_platform_target.csv",
+    "role": "platform target",
+    "cash_basis": false
+  },
+  "AddOnA": {
+    "source_chart": "coa/quickbooks_online_types.csv",
+    "role": "add-on source",
+    "cash_basis": true,
+    "rows": 271,
+    "ledger_accounts_mapped": 274
+  },
+  "AddOnB": {
+    "source_chart": "coa/ucoa_nonprofit.csv",
+    "role": "add-on source",
+    "cash_basis": false,
+    "rows": 228,
+    "ledger_accounts_mapped": 180
+  },
+  "AddOnC": {
+    "source_chart": "coa/erpnext_standard_numbered.csv",
+    "role": "add-on source",
+    "cash_basis": false,
+    "rows": 80,
+    "ledger_accounts_mapped": 54
+  }
+}

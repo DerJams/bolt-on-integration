@@ -1,6 +1,6 @@
 # Generation report
 
-Generated 2026-10-11 by `scripts/generate_synthetic.py`, seed 3391519676 (`synthetic/SEED.txt`). Every number below is computed by the script. Holdout figures are counts only.
+Generated 2026-10-12 by `scripts/generate_synthetic.py`, seed 3391519676 (`synthetic/SEED.txt`). Every number below is computed by the script. Holdout figures are counts only.
 
 ## Tracks
 

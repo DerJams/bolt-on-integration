@@ -26,6 +26,11 @@ Both tracks come from the same seed, partition and dev/holdout split. A system s
 - `review/coa_mappings_dev.csv`, `review/coa_mappings_holdout.csv`: the chart-of-accounts mapping key exported for
   independent review. **The mapping key awaits independent review**: it was written by the generating model, not by an
   independent party. The holdout file goes to the reviewer unopened.
+- `review/inputs/`: what an independent reviewer gets to build a mapping key from scratch: the four charts as the
+  benchmark presents them, `labels.md` and `survivorship_fields.md`. No mapping or rationale.
+- `review/compare_keys.py`: adopts an independent mapping CSV as the answer key, reports the per-row disagreement rate
+  against the current key, and archives the current key as `coa_mappings_claude.csv`. Re-running the generator
+  restores the generated key; run `compare_keys.py` again afterwards.
 - `injection_log.json`: exact injection rates and the removed AddOn A accounts.
 - `GENERATION_REPORT.md`: counts only.
 - `PROPOSED_DEFECTS.md`: observed conditions proposed as taxonomy rows, not applied.
